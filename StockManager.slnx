@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Itens de Solução/">
+    <File Path=".dockerignore" />
+    <File Path=".gitignore" />
+    <File Path="dockerfile" />
+    <File Path="ReadMe.md" />
+  </Folder>
+  <Project Path="StockManager.Api/StockManager.Api.csproj" />
+</Solution>
