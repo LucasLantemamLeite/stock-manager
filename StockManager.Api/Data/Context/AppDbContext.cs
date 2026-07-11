@@ -9,7 +9,8 @@ public sealed class AppDbContext : DbContext
     public DbSet<User> Users { get; init; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("");
+        => optionsBuilder.UseSqlServer("Server=localhost,1433;Database=StockManagerDb;User Id=sa;" +
+                                       "Password=sqlserver2025@123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
