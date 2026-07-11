@@ -42,7 +42,7 @@ public sealed class UserMap : IEntityTypeConfiguration<User>
             .IsUnique();
 
         builder.Property(u => u.CompanyId)
-            .HasColumnType("UNIQUEINDENTIFIER")
+            .HasColumnType("UNIQUEIDENTIFIER")
             .HasColumnName("CompanyId")
             .IsRequired();
 
