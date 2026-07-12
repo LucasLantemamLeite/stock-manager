@@ -47,4 +47,21 @@ app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, App
     return Results.Ok(new { message = "Login realizado com sucesso!", data = userToLogin });
 });
 
+app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbContext context) =>
+{
+    var userToUpdate = await context.Users.SingleOrDefaultAsync(u => u.Id == requestInput.Id);
+
+    if (userToUpdate is null || userToUpdate.Password != requestInput.ConfirmPassword)
+        return Results.BadRequest("Credenciais incorretas");
+
+    userToUpdate.SetName(requestInput.NewName);
+    userToUpdate.SetEmail(requestInput.NewEmail);
+    userToUpdate.SetPhone(requestInput.NewPhone);
+    userToUpdate.SetPassword(requestInput.NewPassword);
+    userToUpdate.SetUpdateAtToNow();
+
+    await context.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Usuário atualizado com sucesso!", data = userToUpdate });
+});
 app.Run();
