@@ -49,6 +49,12 @@ namespace StockManager.Api.Migrations
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Name");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("Password");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)

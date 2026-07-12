@@ -18,6 +18,7 @@ namespace StockManager.Api.Migrations
                     Name = table.Column<string>(type: "NVARCHAR(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "NVARCHAR(255)", maxLength: 255, nullable: false),
                     Phone = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
+                    Password = table.Column<string>(type: "VARCHAR(60)", maxLength: 60, nullable: false),
                     CompanyId = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
                     Role = table.Column<byte>(type: "TINYINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false),

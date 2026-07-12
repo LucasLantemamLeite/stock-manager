@@ -12,7 +12,7 @@ using StockManager.Api.Data.Context;
 namespace StockManager.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260711203059_InitialDeploy")]
+    [Migration("20260712193203_InitialDeploy")]
     partial class InitialDeploy
     {
         /// <inheritdoc />
@@ -51,6 +51,12 @@ namespace StockManager.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Name");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("Password");
 
                     b.Property<string>("Phone")
                         .IsRequired()
