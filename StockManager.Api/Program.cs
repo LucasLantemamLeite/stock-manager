@@ -64,4 +64,19 @@ app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbCo
 
     return Results.Ok(new { message = "Usuário atualizado com sucesso!", data = userToUpdate });
 });
+
+app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, AppDbContext context) =>
+{
+    var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id == requestInput.Id);
+
+    if (userToDelete is null || userToDelete.Password != requestInput.ConfirmPassword)
+        return Results.BadRequest("Credenciais incorretas");
+
+    context.Users.Remove(userToDelete);
+
+    await context.SaveChangesAsync();
+
+    return Results.Ok(new { message = "Usuário deletado com sucesso.", data = userToDelete });
+});
+
 app.Run();
