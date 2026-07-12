@@ -14,21 +14,23 @@ public sealed class User : Entity
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
-    public User(string name, string email, string phone, Guid companyId, Role role)
+    public User(string name, string email, string phone, string password, Guid companyId, Role role)
     {
         Name = name;
         Email = email;
         Phone = phone;
+        Password = password;
         CompanyId = companyId;
         Role = role;
     }
 
-    public User(Guid id, string name, string email, string phone, Guid companyId,
+    public User(Guid id, string name, string email, string phone, string password, Guid companyId,
         Role role, DateTime createdAt, DateTime updatedAt) : base(id)
     {
         Name = name;
         Email = email;
         Phone = phone;
+        Password = password;
         CompanyId = companyId;
         Role = role;
         CreatedAt = createdAt;
