@@ -37,4 +37,14 @@ app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbCon
     return Results.Ok(new { message = "Usuário adicionado com sucesso.", data = userToAdd });
 });
 
+app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, AppDbContext context) =>
+{
+    var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email == requestInput.Email);
+
+    if (userToLogin is null || userToLogin.Password != requestInput.Password)
+        return Results.BadRequest("Credenciais incorretas.");
+
+    return Results.Ok(new { message = "Login realizado com sucesso!", data = userToLogin });
+});
+
 app.Run();
