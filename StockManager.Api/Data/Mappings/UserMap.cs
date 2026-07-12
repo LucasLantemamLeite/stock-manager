@@ -41,6 +41,12 @@ public sealed class UserMap : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Phone, "Unique_Key_Users_Phone")
             .IsUnique();
 
+        builder.Property(u => u.Password)
+            .HasColumnName("Password")
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(60)
+            .IsRequired();
+
         builder.Property(u => u.CompanyId)
             .HasColumnType("UNIQUEIDENTIFIER")
             .HasColumnName("CompanyId")
