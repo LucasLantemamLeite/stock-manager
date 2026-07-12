@@ -25,6 +25,7 @@ app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbCon
         name: requestInput.Name,
         email: requestInput.Email,
         phone: requestInput.Phone,
+        password: requestInput.Password,
         companyId: Guid.NewGuid(),
         role: (Role)requestInput.Role
     );

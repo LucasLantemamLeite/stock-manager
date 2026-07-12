@@ -4,5 +4,6 @@ public sealed record CreateUserInput(
     string Name,
     string Email,
     string Phone,
+    string Password,
     sbyte Role
 );
