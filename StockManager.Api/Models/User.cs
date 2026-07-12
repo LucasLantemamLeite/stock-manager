@@ -36,4 +36,31 @@ public sealed class User : Entity
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
+
+    public void SetName(string? newName)
+    {
+        if (string.IsNullOrEmpty(newName)) return;
+        Name = newName;
+    }
+
+    public void SetEmail(string? newEmail)
+    {
+        if (string.IsNullOrEmpty(newEmail)) return;
+        Email = newEmail;
+    }
+
+    public void SetPhone(string? newPhone)
+    {
+        if (string.IsNullOrEmpty(newPhone)) return;
+        Phone = newPhone;
+    }
+
+    public void SetPassword(string? newPassword)
+    {
+        if (string.IsNullOrEmpty(newPassword)) return;
+        Password = newPassword;
+    }
+
+    public void SetUpdateAtToNow()
+        => UpdatedAt = DateTime.UtcNow;
 }
