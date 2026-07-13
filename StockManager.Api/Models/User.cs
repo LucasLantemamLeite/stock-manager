@@ -39,25 +39,25 @@ public sealed class User : Entity
 
     public void SetName(string? newName)
     {
-        if (string.IsNullOrEmpty(newName)) return;
+        if (string.IsNullOrEmpty(newName) || Name.Equals(newName)) return;
         Name = newName;
     }
 
     public void SetEmail(string? newEmail)
     {
-        if (string.IsNullOrEmpty(newEmail)) return;
+        if (string.IsNullOrEmpty(newEmail) || Email.Equals(newEmail)) return;
         Email = newEmail;
     }
 
     public void SetPhone(string? newPhone)
     {
-        if (string.IsNullOrEmpty(newPhone)) return;
+        if (string.IsNullOrEmpty(newPhone) || Phone.Equals(newPhone)) return;
         Phone = newPhone;
     }
 
     public void SetPassword(string? newPassword)
     {
-        if (string.IsNullOrEmpty(newPassword)) return;
+        if (string.IsNullOrEmpty(newPassword) || Password.Equals(newPassword)) return;
         Password = newPassword;
     }
 
