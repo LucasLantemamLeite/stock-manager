@@ -17,6 +17,7 @@ var secretKey = builder.Configuration.GetValue<string>("SecretKey")
     ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings!");
 
 builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
+builder.Services.AddSingleton<IHasherService, BCryptHashService>();
 
 var app = builder.Build();
 
