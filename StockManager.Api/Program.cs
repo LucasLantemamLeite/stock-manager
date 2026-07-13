@@ -21,7 +21,7 @@ builder.Services.AddSingleton<IHasherService, BCryptHashService>();
 
 var app = builder.Build();
 
-app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbContext context, ITokenService tokenService) =>
+app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbContext context, ITokenService tokenService, IHasherService hasherService) =>
 {
     if (await context.Users.AnyAsync(u => u.Email == requestInput.Email))
         return Results.Conflict("Email já está em uso.");
@@ -33,7 +33,7 @@ app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbCon
         name: requestInput.Name,
         email: requestInput.Email,
         phone: requestInput.Phone,
-        password: requestInput.Password,
+        password: hasherService.GeneratePasswordHash(requestInput.Password),
         companyId: Guid.NewGuid(),
         role: (Role)requestInput.Role
     );
@@ -45,27 +45,33 @@ app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbCon
     return Results.Ok(new { message = "Usuário adicionado com sucesso.", token = tokenService.GenerateAuthToken(userToAdd) });
 });
 
-app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, AppDbContext context, ITokenService tokenService) =>
+app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, AppDbContext context, ITokenService tokenService, IHasherService hasherService) =>
 {
     var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email == requestInput.Email);
 
-    if (userToLogin is null || userToLogin.Password != requestInput.Password)
+    if (userToLogin is null || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
         return Results.BadRequest("Credenciais incorretas.");
 
     return Results.Ok(new { message = "Login realizado com sucesso!", token = tokenService.GenerateAuthToken(userToLogin) });
 });
 
-app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbContext context) =>
+app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbContext context, IHasherService hasherService) =>
 {
     var userToUpdate = await context.Users.SingleOrDefaultAsync(u => u.Id == requestInput.Id);
 
-    if (userToUpdate is null || userToUpdate.Password != requestInput.ConfirmPassword)
+    if (userToUpdate is null || !hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
         return Results.BadRequest("Credenciais incorretas");
 
     userToUpdate.SetName(requestInput.NewName);
     userToUpdate.SetEmail(requestInput.NewEmail);
     userToUpdate.SetPhone(requestInput.NewPhone);
-    userToUpdate.SetPassword(requestInput.NewPassword);
+
+    userToUpdate.SetPassword(
+        requestInput.NewPassword is not null
+        ? hasherService.GeneratePasswordHash(requestInput.NewPassword)
+        : null
+    );
+
     userToUpdate.SetUpdateAtToNow();
 
     await context.SaveChangesAsync();
@@ -73,11 +79,11 @@ app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbCo
     return Results.Ok(new { message = "Usuário atualizado com sucesso!", data = userToUpdate });
 });
 
-app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, AppDbContext context) =>
+app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, AppDbContext context, IHasherService hasherService) =>
 {
     var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id == requestInput.Id);
 
-    if (userToDelete is null || userToDelete.Password != requestInput.ConfirmPassword)
+    if (userToDelete is null || !hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
         return Results.BadRequest("Credenciais incorretas");
 
     context.Users.Remove(userToDelete);
