@@ -20,7 +20,7 @@ builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 
 var app = builder.Build();
 
-app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbContext context) =>
+app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbContext context, ITokenService tokenService) =>
 {
     if (await context.Users.AnyAsync(u => u.Email == requestInput.Email))
         return Results.Conflict("Email já está em uso.");
@@ -41,17 +41,17 @@ app.MapPost("/v1/user", async ([FromBody] CreateUserInput requestInput, AppDbCon
 
     await context.SaveChangesAsync();
 
-    return Results.Ok(new { message = "Usuário adicionado com sucesso.", data = userToAdd });
+    return Results.Ok(new { message = "Usuário adicionado com sucesso.", token = tokenService.GenerateAuthToken(userToAdd) });
 });
 
-app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, AppDbContext context) =>
+app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, AppDbContext context, ITokenService tokenService) =>
 {
     var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email == requestInput.Email);
 
     if (userToLogin is null || userToLogin.Password != requestInput.Password)
         return Results.BadRequest("Credenciais incorretas.");
 
-    return Results.Ok(new { message = "Login realizado com sucesso!", data = userToLogin });
+    return Results.Ok(new { message = "Login realizado com sucesso!", token = tokenService.GenerateAuthToken(userToLogin) });
 });
 
 app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, AppDbContext context) =>
