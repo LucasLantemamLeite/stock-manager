@@ -2,14 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Enums;
+using StockManager.Api.Interfaces;
 using StockManager.Api.Models;
 using StockManager.Api.Requests.Inputs;
+using StockManager.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var dbConnectionString = builder.Configuration.GetConnectionString("Default");
 
 builder.Services.AddDbContext<AppDbContext>(c => c.UseSqlServer(dbConnectionString));
+
+var secretKey = builder.Configuration.GetValue<string>("SecretKey")
+    ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings!");
+
+builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 
 var app = builder.Build();
 
