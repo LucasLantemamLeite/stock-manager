@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Requests.Inputs;
 using StockManager.Api.UseCases;
+using System.Security.Claims;
 
 namespace StockManager.Api.Extensions;
 
@@ -22,8 +23,7 @@ public static class UserEndpointExtension
                     useCaseResult.Message,
                     token = useCaseResult.Data
                 }, statusCode: useCaseResult.IntStatusCode);
-            })
-                .AllowAnonymous();
+            }).AllowAnonymous();
 
             app.MapPost("/v1/user/login", async ([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase) =>
             {
@@ -37,28 +37,37 @@ public static class UserEndpointExtension
                     useCaseResult.Message,
                     token = useCaseResult.Data
                 }, statusCode: useCaseResult.IntStatusCode);
-            })
-                .AllowAnonymous();
+            }).AllowAnonymous();
 
-            app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase) =>
+            app.MapPatch("/v1/user", async ([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase, ClaimsPrincipal token) =>
             {
-                var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput);
+                var tokenIdString = token.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
+                    return Results.Unauthorized();
+
+                var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
                 if (useCaseResult.StopExecution)
                     return Results.Json(new { useCaseResult.Message }, statusCode: useCaseResult.IntStatusCode);
 
                 return Results.Json(new { useCaseResult.Message }, statusCode: useCaseResult.IntStatusCode);
-            });
+            }).RequireAuthorization();
 
-            app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, DeleteUserUseCase deleteUserUseCase) =>
+            app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, DeleteUserUseCase deleteUserUseCase, ClaimsPrincipal token) =>
             {
-                var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput);
+                var tokenIdString = token.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
+                    return Results.Unauthorized();
+
+                var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
                 if (useCaseResult.StopExecution)
                     return Results.Json(new { useCaseResult.Message }, statusCode: useCaseResult.IntStatusCode);
 
                 return Results.Json(new { useCaseResult.Message }, statusCode: useCaseResult.IntStatusCode);
-            });
+            }).RequireAuthorization();
         }
     }
 }
