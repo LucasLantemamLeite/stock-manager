@@ -11,13 +11,21 @@ public sealed class LoginUserUseCase(AppDbContext context, IHasherService hasher
 {
     public async Task<UseCaseResult<string>> ExecuteAsync(LoginUserInput requestInput)
     {
-        var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email == requestInput.Email);
+        var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email.Equals(requestInput.Email));
 
         if (userToLogin is null || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
-            return new(HttpStatusCode.Unauthorized, "Credênciais incorretas.", false);
+            return new(
+                HttpStatusCode: HttpStatusCode.Unauthorized,
+                Message: "Credênciais incorretas.",
+                StopExecution: true
+            );
 
         var userAuthToken = tokenService.GenerateAuthToken(userToLogin);
 
-        return new(HttpStatusCode.OK, "Login realizado com sucesso.", true, userAuthToken);
+        return new(
+            HttpStatusCode: HttpStatusCode.OK,
+            Message: "Login realizado com sucesso.",
+            Data: userAuthToken
+        );
     }
 }
