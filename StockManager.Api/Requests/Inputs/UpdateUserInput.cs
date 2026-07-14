@@ -9,9 +9,11 @@ public sealed record UpdateUserInput : ConfirmPasswordInput
     public string? NewName { get; init; }
 
     [MaxLength(255, ErrorMessage = "O campo 'e-mail' não deve ser superior a 255 caracteres.")]
+    [EmailAddress(ErrorMessage = "O campo 'e-email' não possui um campo válido.")]
     public string? NewEmail { get; init; }
 
     [MaxLength(20, ErrorMessage = "O campo 'número de telefone' não deve ser superior a 20 caracteres.")]
+    [Phone(ErrorMessage = "O campo 'número de telefone' não possui um formato válido.")]
     public string? NewPhone { get; init; }
 
     [MinLength(8, ErrorMessage = "O campo 'senha' deve ser superior a 8 caracteres.")]

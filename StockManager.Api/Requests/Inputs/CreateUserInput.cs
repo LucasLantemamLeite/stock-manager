@@ -11,10 +11,12 @@ public sealed record CreateUserInput
 
     [Required(ErrorMessage = "O campo 'e-mail' é obrigatório.")]
     [MaxLength(255, ErrorMessage = "O campo 'e-mail' não deve ser superior a 255 caracteres.")]
+    [EmailAddress(ErrorMessage = "O campo 'e-email' não possui um campo válido.")]
     public required string Email { get; init; }
 
     [Required(ErrorMessage = "O campo 'número de telefone' é obrigatório.")]
     [MaxLength(20, ErrorMessage = "O campo 'número de telefone' não deve ser superior a 20 caracteres.")]
+    [Phone(ErrorMessage = "O campo 'número de telefone' não possui um formato válido.")]
     public required string Phone { get; init; }
 
     [Required(ErrorMessage = "O campo 'senha' é obrigatório.")]
