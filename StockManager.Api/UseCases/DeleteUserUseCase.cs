@@ -17,8 +17,7 @@ public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hashe
         if (userToDelete is null || !hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
             return new(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
-                Message: "Credênciais incorretas.",
-                StopExecution: true
+                Message: "Credênciais incorretas."
             );
 
         context.Users.Remove(userToDelete);

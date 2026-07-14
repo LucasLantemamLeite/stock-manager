@@ -14,13 +14,15 @@ public sealed class CreateUserUseCase(AppDbContext context, IHasherService hashe
     public async Task<UseCaseResult<string>> ExecuteAsync(CreateUserInput requestInput)
     {
         if (await context.Users.AnyAsync(u => u.Email == requestInput.Email))
-            return new(HttpStatusCode.Conflict, "Email já está em uso.", false);
+            return new(
+                HttpStatusCode: HttpStatusCode.Conflict,
+                Message: "Email já está em uso."
+            );
 
         if (await context.Users.AnyAsync(u => u.Phone == requestInput.Phone))
             return new(
                 HttpStatusCode: HttpStatusCode.Conflict,
-                Message: "Número de telefone já está em uso.",
-                StopExecution: true
+                Message: "Número de telefone já está em uso."
             );
 
         var userPasswordHash = hasherService.GeneratePasswordHash(requestInput.Password);

@@ -17,8 +17,7 @@ public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hashe
         if (userToUpdate is null || !hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
             return new(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
-                Message: "Credenciais incorretas.",
-                StopExecution: true
+                Message: "Credenciais incorretas."
             );
 
         var newPasswordHash = requestInput.NewPassword is not null

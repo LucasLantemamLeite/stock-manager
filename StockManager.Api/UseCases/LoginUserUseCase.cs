@@ -16,8 +16,7 @@ public sealed class LoginUserUseCase(AppDbContext context, IHasherService hasher
         if (userToLogin is null || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
             return new(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
-                Message: "Credênciais incorretas.",
-                StopExecution: true
+                Message: "Credênciais incorretas."
             );
 
         var userAuthToken = tokenService.GenerateAuthToken(userToLogin);
