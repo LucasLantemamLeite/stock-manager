@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Extensions;
 using StockManager.Api.Interfaces;
 using StockManager.Api.Services;
 using StockManager.Api.UseCases;
@@ -50,7 +49,5 @@ var app = builder.Build();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.AddUserEndpoints();
 
 app.Run();
