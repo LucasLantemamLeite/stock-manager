@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Requests.Inputs;
+using StockManager.Api.Shared.Requests.Inputs;
 using StockManager.Api.UseCases;
 using System.Security.Claims;
 
@@ -27,6 +28,9 @@ public sealed class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var useCaseResult = await loginUserUseCase.ExecuteAsync(requestInput);
 
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
@@ -41,6 +45,9 @@ public sealed class UserController : ControllerBase
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
 
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
@@ -48,12 +55,15 @@ public sealed class UserController : ControllerBase
 
     [HttpDelete("user")]
     [Authorize]
-    public async Task<IActionResult> DeleteUserAsync([FromBody] DeleteUserInput requestInput, DeleteUserUseCase deleteUserUseCase)
+    public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
         var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
+
+        if (ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
         var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
