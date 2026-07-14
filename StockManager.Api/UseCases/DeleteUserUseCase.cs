@@ -10,9 +10,9 @@ namespace StockManager.Api.UseCases;
 
 public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult<User>> ExecuteAsync(DeleteUserInput requestInput)
+    public async Task<UseCaseResult<User>> ExecuteAsync(DeleteUserInput requestInput, Guid userTargetId)
     {
-        var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id == requestInput.Id);
+        var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
 
         if (userToDelete is null || !hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
             return new(
