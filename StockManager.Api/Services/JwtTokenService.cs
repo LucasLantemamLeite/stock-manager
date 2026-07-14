@@ -28,6 +28,7 @@ public sealed class JwtTokenService(string secretKey) : ITokenService
             Subject = new ClaimsIdentity(
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("companyid", user.CompanyId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             ]),
         };
