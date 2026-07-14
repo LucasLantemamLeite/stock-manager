@@ -36,6 +36,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddControllers();
+
 builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 builder.Services.AddSingleton<IHasherService, BCryptHashService>();
 
@@ -49,5 +51,7 @@ var app = builder.Build();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();
