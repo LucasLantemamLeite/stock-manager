@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Enums;
 using StockManager.Api.Interfaces;
 using StockManager.Api.Models;
 using StockManager.Api.Requests.Inputs;
@@ -33,7 +32,7 @@ public sealed class CreateUserUseCase(AppDbContext context, IHasherService hashe
             phone: requestInput.Phone,
             password: userPasswordHash,
             companyId: Guid.NewGuid(),
-            role: (Role)requestInput.Role
+            role: requestInput.Role
         );
 
         context.Users.Add(userToAdd);
