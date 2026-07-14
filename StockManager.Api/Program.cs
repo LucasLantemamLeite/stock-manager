@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Extensions;
 using StockManager.Api.Interfaces;
 using StockManager.Api.Services;
 using StockManager.Api.UseCases;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,26 @@ builder.Services.AddDbContext<AppDbContext>(c => c.UseSqlServer(dbConnectionStri
 var secretKey = builder.Configuration.GetValue<string>("SecretKey")
     ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings!");
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options => options.TokenValidationParameters = new()
+{
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+    ValidTypes = ["JWT"],
+    ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
+    ValidateIssuer = true,
+    ValidIssuer = "stock-manager-server",
+    RequireAudience = true,
+    ValidAudience = "stock-manager-client",
+    ValidateLifetime = true,
+    RequireExpirationTime = true,
+});
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 builder.Services.AddSingleton<IHasherService, BCryptHashService>();
 
@@ -23,6 +46,10 @@ builder.Services.AddTransient<UpdateUserUseCase>();
 builder.Services.AddTransient<DeleteUserUseCase>();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.AddUserEndpoints();
 
