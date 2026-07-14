@@ -1,3 +1,10 @@
-﻿namespace StockManager.Api.Requests.Inputs;
+﻿using StockManager.Api.Shared.Requests.Inputs;
+using System.ComponentModel.DataAnnotations;
 
-public sealed record LoginUserInput(string Email, string ConfirmPassword);
+namespace StockManager.Api.Requests.Inputs;
+
+public sealed record LoginUserInput : ConfirmPasswordInput
+{
+    [Required(ErrorMessage = "O campo 'e-mail' é obrigatório.")]
+    public required string Email { get; init; }
+};
