@@ -19,6 +19,18 @@ public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hashe
                 Message: "Credenciais incorretas."
             );
 
+        if (await context.Users.AnyAsync(u => u.Email.Equals(requestInput.NewEmail)))
+            return new(
+                HttpStatusCode: HttpStatusCode.Conflict,
+                Message: "Email já está em uso."
+            );
+
+        if (await context.Users.AnyAsync(u => u.Phone.Equals(requestInput.NewPhone)))
+            return new(
+                HttpStatusCode: HttpStatusCode.Conflict,
+                Message: "Número de telefone já está em uso."
+            );
+
         var newPasswordHash = requestInput.NewPassword is not null
             ? hasherService.GeneratePasswordHash(requestInput.NewPassword)
             : null;
