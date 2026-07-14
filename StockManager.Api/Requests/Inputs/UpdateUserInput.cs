@@ -5,6 +5,5 @@ public sealed record UpdateUserInput(
     string? NewEmail,
     string? NewPhone,
     string? NewPassword,
-    Guid Id,
     string ConfirmPassword
 );
