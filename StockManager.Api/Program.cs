@@ -3,6 +3,7 @@ using StockManager.Api.Data.Context;
 using StockManager.Api.Extensions;
 using StockManager.Api.Interfaces;
 using StockManager.Api.Services;
+using StockManager.Api.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,11 @@ var secretKey = builder.Configuration.GetValue<string>("SecretKey")
 
 builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 builder.Services.AddSingleton<IHasherService, BCryptHashService>();
+
+builder.Services.AddTransient<CreateUserUseCase>();
+builder.Services.AddTransient<LoginUserUseCase>();
+builder.Services.AddTransient<UpdateUserUseCase>();
+builder.Services.AddTransient<DeleteUserUseCase>();
 
 var app = builder.Build();
 
