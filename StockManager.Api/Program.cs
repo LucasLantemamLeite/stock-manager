@@ -51,6 +51,28 @@ builder.Services.AddTransient<DeleteUserUseCase>();
 
 var app = builder.Build();
 
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next(context);
+    }
+
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, $"Uma exceção foi capturada.");
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        var errorMessage = new { message = "Ocorreu um erro interno no servidor. Tente novamente mais tarde." };
+
+        await context.Response.WriteAsJsonAsync(errorMessage);
+    }
+});
+
 app.UseAuthentication();
 
 app.UseAuthorization();
