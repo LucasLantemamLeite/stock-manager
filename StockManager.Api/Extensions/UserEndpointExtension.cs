@@ -42,11 +42,7 @@ public static class UserEndpointExtension
 
                 var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-                return Results.Json(new
-                {
-                    useCaseResult.Message,
-                    useCaseResult.Data
-                }, statusCode: useCaseResult.IntStatusCode);
+                return Results.Json(new { useCaseResult.Message, }, statusCode: useCaseResult.IntStatusCode);
             }).RequireAuthorization();
 
             app.MapDelete("/v1/user", async ([FromBody] DeleteUserInput requestInput, DeleteUserUseCase deleteUserUseCase, ClaimsPrincipal token) =>
@@ -58,11 +54,7 @@ public static class UserEndpointExtension
 
                 var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-                return Results.Json(new
-                {
-                    useCaseResult.Message,
-                    useCaseResult.Data
-                }, statusCode: useCaseResult.IntStatusCode);
+                return Results.Json(new { useCaseResult.Message, }, statusCode: useCaseResult.IntStatusCode);
             }).RequireAuthorization();
         }
     }
