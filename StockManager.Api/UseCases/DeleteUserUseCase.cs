@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Interfaces;
-using StockManager.Api.Requests.Inputs;
 using StockManager.Api.Requests.Outputs;
+using StockManager.Api.Shared.Requests.Inputs;
 using System.Net;
 
 namespace StockManager.Api.UseCases;
 
 public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult> ExecuteAsync(DeleteUserInput requestInput, Guid userTargetId)
+    public async Task<UseCaseResult> ExecuteAsync(ConfirmPasswordInput requestInput, Guid userTargetId)
     {
         var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
 
