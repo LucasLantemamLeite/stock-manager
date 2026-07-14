@@ -62,7 +62,7 @@ app.Use(async (context, next) =>
 
     catch (Exception ex)
     {
-        logger.LogWarning(ex, $"Uma exceção foi capturada.");
+        logger.LogWarning(ex, "Uma exceção foi capturada.");
 
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = "application/json";
