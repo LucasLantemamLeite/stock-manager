@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using StockManager.Api.Data.Context;
@@ -34,7 +35,9 @@ builder.Services.AddAuthentication(options =>
     RequireExpirationTime = true,
 });
 
-builder.Services.AddAuthorization();
+builder.Services
+    .AddAuthorization()
+    .Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddControllers();
 
