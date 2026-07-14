@@ -15,6 +15,9 @@ public sealed class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput, CreateUserUseCase createUserUseCase)
     {
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
         var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput);
 
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
