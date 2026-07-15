@@ -1,7 +1,7 @@
-﻿using StockManager.Api.Enums;
-using StockManager.Api.Shared.Base;
+﻿using StockManager.Api.Entities.Base;
+using StockManager.Api.Entities.Users.Enums;
 
-namespace StockManager.Api.Models;
+namespace StockManager.Api.Entities.Users.Models;
 
 public sealed class User : Entity
 {

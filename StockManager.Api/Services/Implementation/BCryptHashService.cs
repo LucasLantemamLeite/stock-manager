@@ -1,7 +1,7 @@
-﻿using StockManager.Api.Interfaces;
+﻿using StockManager.Api.Services.Interfaces;
 using BC = BCrypt.Net.BCrypt;
 
-namespace StockManager.Api.Services;
+namespace StockManager.Api.Services.Implementation;
 
 public sealed class BCryptHashService : IHasherService
 {

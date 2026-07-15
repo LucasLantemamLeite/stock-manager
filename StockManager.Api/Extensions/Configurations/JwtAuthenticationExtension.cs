@@ -2,11 +2,11 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace StockManager.Api.Extensions;
+namespace StockManager.Api.Extensions.Configurations;
 
-public static class SecurityTokenExtension
+public static class JwtAuthenticationExtension
 {
-    public static void AddAuthenticationConfiguration(this IServiceCollection services, string secretKey)
+    public static void ConfigureJwtAuthentication(this IServiceCollection services, string secretKey)
     {
         services.AddAuthentication(options =>
         {

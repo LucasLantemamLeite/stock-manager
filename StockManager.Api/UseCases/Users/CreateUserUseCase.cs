@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Interfaces;
-using StockManager.Api.Models;
-using StockManager.Api.Requests.Inputs;
-using StockManager.Api.Requests.Outputs;
+using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.Requests.Users.Inputs;
+using StockManager.Api.Results;
+using StockManager.Api.Services.Interfaces;
 using System.Net;
 
-namespace StockManager.Api.UseCases;
+namespace StockManager.Api.UseCases.Users;
 
 public sealed class CreateUserUseCase(AppDbContext context, IHasherService hasherService, ITokenService tokenService)
 {

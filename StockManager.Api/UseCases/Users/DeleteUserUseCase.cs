@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Interfaces;
-using StockManager.Api.Requests.Outputs;
-using StockManager.Api.Shared.Requests.Inputs;
+using StockManager.Api.Results;
+using StockManager.Api.Services.Interfaces;
 using System.Net;
 
-namespace StockManager.Api.UseCases;
+namespace StockManager.Api.UseCases.Users;
 
 public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
 {

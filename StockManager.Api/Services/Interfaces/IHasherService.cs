@@ -1,4 +1,4 @@
-﻿namespace StockManager.Api.Interfaces;
+﻿namespace StockManager.Api.Services.Interfaces;
 
 public interface IHasherService
 {

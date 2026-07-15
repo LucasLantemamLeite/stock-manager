@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Interfaces;
-using StockManager.Api.Requests.Inputs;
-using StockManager.Api.Requests.Outputs;
+using StockManager.Api.Requests.Users.Inputs;
+using StockManager.Api.Results;
+using StockManager.Api.Services.Interfaces;
 using System.Net;
 
-namespace StockManager.Api.UseCases;
+namespace StockManager.Api.UseCases.Users;
 
 public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hasherService)
 {

@@ -1,7 +1,7 @@
-﻿using StockManager.Api.Enums;
+﻿using StockManager.Api.Entities.Users.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace StockManager.Api.Requests.Inputs;
+namespace StockManager.Api.Requests.Users.Inputs;
 
 public sealed record CreateUserInput
 {

@@ -1,4 +1,4 @@
-﻿namespace StockManager.Api.Enums;
+﻿namespace StockManager.Api.Entities.Users.Enums;
 
 public enum Role
 {

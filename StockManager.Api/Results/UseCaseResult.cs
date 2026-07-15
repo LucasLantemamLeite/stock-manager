@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace StockManager.Api.Requests.Outputs;
+namespace StockManager.Api.Results;
 
 public sealed record UseCaseResult<TData>(HttpStatusCode HttpStatusCode, string Message, TData? Data = null)
     where TData : class

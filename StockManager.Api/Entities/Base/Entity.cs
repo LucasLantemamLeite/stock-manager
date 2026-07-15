@@ -1,4 +1,4 @@
-﻿namespace StockManager.Api.Shared.Base;
+﻿namespace StockManager.Api.Entities.Base;
 
 public abstract class Entity(Guid id)
 {

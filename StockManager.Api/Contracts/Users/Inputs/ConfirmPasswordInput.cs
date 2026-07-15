@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace StockManager.Api.Shared.Requests.Inputs;
+namespace StockManager.Api.Contracts.Users.Inputs;
 
 public record ConfirmPasswordInput
 {

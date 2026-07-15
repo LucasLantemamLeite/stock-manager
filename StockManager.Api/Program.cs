@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Extensions;
-using StockManager.Api.Interfaces;
+using StockManager.Api.Extensions.Configurations;
 using StockManager.Api.Middlewares;
-using StockManager.Api.Services;
-using StockManager.Api.UseCases;
+using StockManager.Api.Services.Implementation;
+using StockManager.Api.Services.Interfaces;
+using StockManager.Api.UseCases.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(c => c.UseSqlServer(dbConnectionStri
 var secretKey = builder.Configuration.GetValue<string>("SecretKey")
     ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings!");
 
-builder.Services.AddAuthenticationConfiguration(secretKey);
+builder.Services.ConfigureJwtAuthentication(secretKey);
 
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);

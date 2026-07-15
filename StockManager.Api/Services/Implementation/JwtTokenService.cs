@@ -1,11 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using StockManager.Api.Interfaces;
-using StockManager.Api.Models;
+using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace StockManager.Api.Services;
+namespace StockManager.Api.Services.Implementation;
 
 public sealed class JwtTokenService(string secretKey) : ITokenService
 {
