@@ -27,4 +27,4 @@ public sealed record CreateUserInput
     [Required(ErrorMessage = "O campo 'nível' é obrigatório.")]
     [Range(1, 2, ErrorMessage = "O campo 'nível' deve estar entre os valores 1 e 2.")]
     public required Role Role { get; init; }
-};
+}

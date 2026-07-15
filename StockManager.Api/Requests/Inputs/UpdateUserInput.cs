@@ -19,4 +19,4 @@ public sealed record UpdateUserInput : ConfirmPasswordInput
     [MinLength(8, ErrorMessage = "O campo 'senha' deve ser superior a 8 caracteres.")]
     [MaxLength(30, ErrorMessage = "O campo 'senha' não deve ser superior a 30 caracteres.")]
     public string? NewPassword { get; init; }
-};
+}
