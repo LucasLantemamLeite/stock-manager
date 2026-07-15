@@ -35,11 +35,8 @@ builder.Services.AddAuthentication(options =>
     RequireExpirationTime = true,
 });
 
-builder.Services
-    .AddAuthorization()
-    .Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
-
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
 builder.Services.AddSingleton<IHasherService, BCryptHashService>();
