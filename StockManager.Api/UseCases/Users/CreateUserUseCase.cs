@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Entities.Users.Models;
-using StockManager.Api.Requests.Users.Inputs;
-using StockManager.Api.Results;
 using StockManager.Api.Services.Interfaces;
+using StockManager.Api.UseCases.Result;
 using System.Net;
 
 namespace StockManager.Api.UseCases.Users;
