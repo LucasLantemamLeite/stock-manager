@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Contracts.Users.Inputs;
-using StockManager.Api.Requests.Users.Inputs;
 using StockManager.Api.UseCases.Users;
 using System.Security.Claims;
 

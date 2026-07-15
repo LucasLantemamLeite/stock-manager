@@ -1,7 +1,6 @@
-﻿using StockManager.Api.Contracts.Users.Inputs;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace StockManager.Api.Requests.Users.Inputs;
+namespace StockManager.Api.Contracts.Users.Inputs;
 
 public sealed record UpdateUserInput : ConfirmPasswordInput
 {
