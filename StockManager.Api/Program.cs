@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Extensions;
 using StockManager.Api.Interfaces;
@@ -28,7 +29,13 @@ builder.Services.AddTransient<LoginUserUseCase>();
 builder.Services.AddTransient<UpdateUserUseCase>();
 builder.Services.AddTransient<DeleteUserUseCase>();
 
+builder.Services.AddOpenApi();
+
 var app = builder.Build();
+
+app.MapOpenApi();
+
+app.MapScalarApiReference();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
