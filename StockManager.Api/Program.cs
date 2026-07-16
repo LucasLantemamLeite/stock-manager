@@ -1,5 +1,6 @@
 using Scalar.AspNetCore;
 using StockManager.Api.Extensions.Configurations;
+using StockManager.Api.Extensions.OpenApi;
 using StockManager.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +15,8 @@ builder.Services.ConfigureJwtAuthentication(secretKey);
 
 builder.ResolveDependency(secretKey);
 
-builder.Services.AddOpenApi();
+builder.Services.AddDocumentTransformerOpenApi();
+builder.Services.AddOperationTransformerOpenApi();
 
 var app = builder.Build();
 
