@@ -9,7 +9,7 @@ namespace StockManager.Api.Services.Implementation;
 
 public sealed class JwtTokenService(string secretKey) : ITokenService
 {
-    public string SecretKey { get; } = secretKey;
+    private string SecretKey { get; } = secretKey;
 
     public string GenerateAuthToken(User user)
     {

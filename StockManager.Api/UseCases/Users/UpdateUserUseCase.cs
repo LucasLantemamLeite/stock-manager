@@ -4,29 +4,30 @@ using StockManager.Api.Data.Context;
 using StockManager.Api.Services.Interfaces;
 using StockManager.Api.UseCases.Result;
 using System.Net;
+using StockManager.Api.Entities.Users.Models;
 
 namespace StockManager.Api.UseCases.Users;
 
 public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult> ExecuteAsync(UpdateUserInput requestInput, Guid userTargetId)
+    public async Task<UseCaseResult<User>> ExecuteAsync(UpdateUserInput requestInput, Guid userTargetId)
     {
         var userToUpdate = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
 
         if (userToUpdate is null || !hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
-            return new(
+            return new UseCaseResult<User>(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
                 Message: "Credenciais incorretas."
             );
 
         if (await context.Users.AnyAsync(u => u.Email.Equals(requestInput.NewEmail)))
-            return new(
+            return new UseCaseResult<User>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Email já está em uso."
             );
 
         if (await context.Users.AnyAsync(u => u.Phone.Equals(requestInput.NewPhone)))
-            return new(
+            return new UseCaseResult<User>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Número de telefone já está em uso."
             );
@@ -43,7 +44,7 @@ public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hashe
 
         await context.SaveChangesAsync();
 
-        return new(
+        return new UseCaseResult<User>(
             HttpStatusCode: HttpStatusCode.OK,
             Message: "Conta do usuário atualizada com sucesso."
         );

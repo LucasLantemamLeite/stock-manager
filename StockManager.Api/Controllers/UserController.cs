@@ -7,11 +7,11 @@ using System.Security.Claims;
 namespace StockManager.Api.Controllers;
 
 [ApiController]
-[Route("v1")]
+[Route("v1/user")]
 [Tags("Users")]
 public sealed class UserController : ControllerBase
 {
-    [HttpPost("user")]
+    [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput, CreateUserUseCase createUserUseCase)
     {
@@ -20,10 +20,10 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
-    [HttpPost("user/login")]
+    [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase)
     {
@@ -32,10 +32,10 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await loginUserUseCase.ExecuteAsync(requestInput);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
-    [HttpPatch("user")]
+    [HttpPatch]
     [Authorize]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
@@ -49,10 +49,10 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
-    [HttpDelete("user")]
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
@@ -61,11 +61,11 @@ public sealed class UserController : ControllerBase
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
         var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 }

@@ -14,14 +14,14 @@ public sealed class LoginUserUseCase(AppDbContext context, IHasherService hasher
         var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email.Equals(requestInput.Email));
 
         if (userToLogin is null || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
-            return new(
+            return new UseCaseResult<string>(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
                 Message: "Credênciais incorretas."
             );
 
         var userAuthToken = tokenService.GenerateAuthToken(userToLogin);
 
-        return new(
+        return new UseCaseResult<string>(
             HttpStatusCode: HttpStatusCode.OK,
             Message: "Login realizado com sucesso.",
             Data: userAuthToken
