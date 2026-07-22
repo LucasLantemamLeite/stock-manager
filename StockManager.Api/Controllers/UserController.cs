@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.UseCases.Users;
 using System.Security.Claims;
+using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.UseCases.Result;
 
 namespace StockManager.Api.Controllers;
 
@@ -13,6 +15,9 @@ public sealed class UserController : ControllerBase
 {
     [HttpPost]
     [AllowAnonymous]
+    [EndpointDescription("Cria nova conta do usuário.")]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput, CreateUserUseCase createUserUseCase)
     {
         if (!ModelState.IsValid)
@@ -25,6 +30,9 @@ public sealed class UserController : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
+    [EndpointDescription("Loga na conta do usuário.")]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase)
     {
         if (!ModelState.IsValid)
@@ -37,6 +45,10 @@ public sealed class UserController : ControllerBase
 
     [HttpPatch]
     [Authorize]
+    [EndpointDescription("Atualiza dados da conta do usuário.")]
+    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
         var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -54,6 +66,9 @@ public sealed class UserController : ControllerBase
 
     [HttpDelete]
     [Authorize]
+    [EndpointDescription("Deleta a conta do usuário.")]
+    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
         var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
