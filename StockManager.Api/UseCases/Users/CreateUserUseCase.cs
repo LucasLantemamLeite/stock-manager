@@ -13,13 +13,13 @@ public sealed class CreateUserUseCase(AppDbContext context, IHasherService hashe
     public async Task<UseCaseResult<string>> ExecuteAsync(CreateUserInput requestInput)
     {
         if (await context.Users.AnyAsync(u => u.Email.Equals(requestInput.Email)))
-            return new(
+            return new UseCaseResult<string>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Email já está em uso."
             );
 
         if (await context.Users.AnyAsync(u => u.Phone.Equals(requestInput.Phone)))
-            return new(
+            return new UseCaseResult<string>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Número de telefone já está em uso."
             );
@@ -41,7 +41,7 @@ public sealed class CreateUserUseCase(AppDbContext context, IHasherService hashe
 
         var userAuthToken = tokenService.GenerateAuthToken(userToAdd);
 
-        return new(
+        return new UseCaseResult<string>(
             HttpStatusCode: HttpStatusCode.Created,
             Message: "Conta do usuário criado com sucesso.",
             Data: userAuthToken
