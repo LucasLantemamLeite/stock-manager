@@ -20,7 +20,7 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
     [HttpPost("login")]
@@ -32,7 +32,7 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await loginUserUseCase.ExecuteAsync(requestInput);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
     [HttpPatch]
@@ -49,7 +49,7 @@ public sealed class UserController : ControllerBase
 
         var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 
     [HttpDelete]
@@ -61,11 +61,11 @@ public sealed class UserController : ControllerBase
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
 
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
             return UnprocessableEntity(ModelState);
 
         var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
-        return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
 }
