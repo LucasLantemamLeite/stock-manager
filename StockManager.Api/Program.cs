@@ -20,11 +20,11 @@ builder.Services.AddOperationTransformerOpenApi();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.MapOpenApi();
 
 app.MapScalarApiReference();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
