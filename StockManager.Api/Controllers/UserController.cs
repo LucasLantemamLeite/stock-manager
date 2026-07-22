@@ -46,9 +46,9 @@ public sealed class UserController : ControllerBase
     [HttpPatch]
     [Authorize]
     [EndpointDescription("Atualiza dados da conta do usuário.")]
-    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status409Conflict)]
+    [ProducesResponseType<UseCaseResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<UseCaseResult>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
         var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -67,8 +67,8 @@ public sealed class UserController : ControllerBase
     [HttpDelete]
     [Authorize]
     [EndpointDescription("Deleta a conta do usuário.")]
-    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status200OK)]
-    [ProducesResponseType<UseCaseResult<User>>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<UseCaseResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
         var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);

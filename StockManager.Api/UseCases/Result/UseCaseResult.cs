@@ -11,3 +11,11 @@ public sealed record UseCaseResult<TData>(HttpStatusCode HttpStatusCode, string 
     [JsonIgnore]
     public int IntStatusCode => (int)HttpStatusCode;
 }
+
+public sealed record UseCaseResult(HttpStatusCode HttpStatusCode, string Message)
+{
+    private HttpStatusCode HttpStatusCode { get; } = HttpStatusCode;
+    
+    [JsonIgnore]
+    public int IntStatusCode => (int)HttpStatusCode;
+}
