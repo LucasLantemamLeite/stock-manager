@@ -7,11 +7,11 @@ using System.Security.Claims;
 namespace StockManager.Api.Controllers;
 
 [ApiController]
-[Route("v1")]
+[Route("v1/user")]
 [Tags("Users")]
 public sealed class UserController : ControllerBase
 {
-    [HttpPost("user")]
+    [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput, CreateUserUseCase createUserUseCase)
     {
@@ -23,7 +23,7 @@ public sealed class UserController : ControllerBase
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
     }
 
-    [HttpPost("user/login")]
+    [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase)
     {
@@ -35,7 +35,7 @@ public sealed class UserController : ControllerBase
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message, useCaseResult.Data });
     }
 
-    [HttpPatch("user")]
+    [HttpPatch]
     [Authorize]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
@@ -52,7 +52,7 @@ public sealed class UserController : ControllerBase
         return StatusCode(useCaseResult.IntStatusCode, new { useCaseResult.Message });
     }
 
-    [HttpDelete("user")]
+    [HttpDelete]
     [Authorize]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
