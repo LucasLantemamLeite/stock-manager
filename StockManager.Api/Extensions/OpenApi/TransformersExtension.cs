@@ -22,7 +22,7 @@ public static class TransformersExtension
                         Version = infoVersion,
                     };
                 
-                    const string serverUrl = "{protocol}://localhost:5034/v1";
+                    const string serverUrl = "{protocol}://localhost:5034/";
                     const string serverDescription = "Rota base rodando na máquina local.";
                     var serverVariables = new Dictionary<string, OpenApiServerVariable>()
                     {
