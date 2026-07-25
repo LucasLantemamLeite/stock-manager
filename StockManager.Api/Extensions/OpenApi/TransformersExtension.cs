@@ -63,6 +63,48 @@ public static class TransformersExtension
                             Description = "Informe o token de autenticação Jwt Bearer gerado pelo sistema."
                         }
                     };
+
+                    foreach (var endpointItem in context.DescriptionGroups.SelectMany(d => d.Items))
+                    {
+                        var hasAuthorize = endpointItem.ActionDescriptor.EndpointMetadata
+                            .OfType<IAuthorizeData>()
+                            .Any();
+
+                        var hasAllowAnonymous = endpointItem.ActionDescriptor.EndpointMetadata
+                            .OfType<IAllowAnonymous>()
+                            .Any();
+
+                        if (!hasAuthorize && hasAllowAnonymous)
+                            continue;
+
+                        if (endpointItem.RelativePath is null)
+                            throw new NullReferenceException("Caminho relativo para a rota não encontrado.");
+
+                        var fullRelativePath = endpointItem.RelativePath.StartsWith('/')
+                            ? endpointItem.RelativePath
+                            : '/' + endpointItem.RelativePath;
+
+                        var endpointPathItem = document.Paths[fullRelativePath];
+
+                        if (endpointItem.HttpMethod is null)
+                            throw new NullReferenceException("Método HTTP não encontrado.");
+
+                        var endpointMethod = new HttpMethod(endpointItem.HttpMethod);
+
+                        if (endpointPathItem.Operations is null)
+                            throw new NullReferenceException("Operação da rota não encontrada.");
+                        
+                        var endpointOperation = endpointPathItem.Operations[endpointMethod];
+
+                        endpointOperation.Security = new List<OpenApiSecurityRequirement>()
+                        {
+                            new()
+                            {
+                                [new OpenApiSecuritySchemeReference("BearerAuth", document)] = []
+                            }
+                        };
+                    }
+                    
                 
                     return Task.CompletedTask;
                 })
