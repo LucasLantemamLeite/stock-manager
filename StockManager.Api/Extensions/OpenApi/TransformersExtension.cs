@@ -51,6 +51,18 @@ public static class TransformersExtension
                             Description = "Responsável pelas operações referente ao usuário."
                         }
                     };
+                    
+                    document.Components ??= new OpenApiComponents();
+
+                    document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>()
+                    {
+                        ["BearerAuth"] = new OpenApiSecurityScheme()
+                        {
+                            Type = SecuritySchemeType.Http,
+                            Scheme = "bearer",
+                            Description = "Informe o token de autenticação Jwt Bearer gerado pelo sistema."
+                        }
+                    };
                 
                     return Task.CompletedTask;
                 })
