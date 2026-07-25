@@ -63,6 +63,34 @@ public static class TransformersExtension
                 options.AddOperationTransformer((operation, context, cancellationToken) =>
                 {
 
+                    var responseInternalServerErrorSchema = new OpenApiSchema()
+                    {
+                        Type = JsonSchemaType.Object,
+                        Properties = new Dictionary<string, IOpenApiSchema>()
+                        {
+                            ["message"] = new OpenApiSchema()
+                            {
+                                Type = JsonSchemaType.String,
+                            }
+                        }
+                    };
+
+                    var responseInternalServerErrorContent = new Dictionary<string, OpenApiMediaType>()
+                    {
+                        ["application/json"] = new()
+                        {
+                            Schema = responseInternalServerErrorSchema
+                        }
+                    };
+
+                    operation.Responses ??= new OpenApiResponses();
+
+                    operation.Responses["500"] = new OpenApiResponse()
+                    {
+                        Description = "InternalServerError",
+                        Content = responseInternalServerErrorContent
+                    };
+                    
                     return Task.CompletedTask;
                 })
             );
