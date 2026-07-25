@@ -62,7 +62,6 @@ public static class TransformersExtension
             services.AddOpenApi(options =>
                 options.AddOperationTransformer((operation, context, cancellationToken) =>
                 {
-
                     var responseInternalServerErrorSchema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
