@@ -1,14 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi;
 
 namespace StockManager.Api.Extensions.OpenApi;
 
 public static class TransformersExtension
 {
+    public const string DocumentName = "stockmanager-v1";
+
     extension(IServiceCollection services)
     {
         public void AddDocumentTransformerOpenApi()
         {
-            services.AddOpenApi(options =>
+            services.AddOpenApi(DocumentName,options =>
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
                     const string infoTitle = "Stock Manager | v1";
@@ -113,7 +116,7 @@ public static class TransformersExtension
 
         public void AddOperationTransformerOpenApi()
         {
-            services.AddOpenApi(options =>
+            services.AddOpenApi(DocumentName,options =>
                 options.AddOperationTransformer((operation, context, cancellationToken) =>
                 {
                     var defaultResponseErrorSchema = new OpenApiSchema()
