@@ -24,7 +24,13 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapOpenApi();
 
-app.MapScalarApiReference();
+app.MapScalarApiReference("/docs",options =>
+{
+    options.Title = "Stock Manager Documentation";
+    options.WithOpenApiRoutePattern($"/openapi/{TransformersExtension.DocumentName}.json");
+    options.ForceDarkMode();
+    options.Theme = ScalarTheme.DeepSpace;
+});
 
 app.UseAuthentication();
 
