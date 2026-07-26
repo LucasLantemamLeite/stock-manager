@@ -116,23 +116,24 @@ public static class TransformersExtension
             services.AddOpenApi(options =>
                 options.AddOperationTransformer((operation, context, cancellationToken) =>
                 {
-                    var responseInternalServerErrorSchema = new OpenApiSchema()
+                    var defaultResponseErrorSchema = new OpenApiSchema()
                     {
                         Type = JsonSchemaType.Object,
+                        Required = new HashSet<string>() { "message" },
                         Properties = new Dictionary<string, IOpenApiSchema>()
                         {
                             ["message"] = new OpenApiSchema()
                             {
                                 Type = JsonSchemaType.String,
-                            }
+                            },
                         }
                     };
 
-                    var responseInternalServerErrorContent = new Dictionary<string, OpenApiMediaType>()
+                    var defaultResponseErrorContent = new Dictionary<string, OpenApiMediaType>()
                     {
                         ["application/json"] = new()
                         {
-                            Schema = responseInternalServerErrorSchema
+                            Schema = defaultResponseErrorSchema
                         }
                     };
 
@@ -141,8 +142,25 @@ public static class TransformersExtension
                     operation.Responses["500"] = new OpenApiResponse()
                     {
                         Description = "InternalServerError",
-                        Content = responseInternalServerErrorContent
+                        Content = defaultResponseErrorContent
                     };
+                    
+                    var hasAuthorize = context.Description.ActionDescriptor.EndpointMetadata
+                        .OfType<IAuthorizeData>()
+                        .Any();
+                    
+                    var hasAllowAnonymous = context.Description.ActionDescriptor.EndpointMetadata
+                        .OfType<IAllowAnonymous>()
+                        .Any();
+
+                    if (hasAuthorize && !hasAllowAnonymous)
+                    {
+                        operation.Responses["401"] = new OpenApiResponse()
+                        {
+                            Description = "Unauthorized",
+                            Content = defaultResponseErrorContent
+                        };
+                    }
                     
                     return Task.CompletedTask;
                 })
