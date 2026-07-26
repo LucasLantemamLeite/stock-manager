@@ -10,12 +10,12 @@ namespace StockManager.Api.UseCases.Users;
 
 public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult<User>> ExecuteAsync(ConfirmPasswordInput requestInput, Guid userTargetId)
+    public async Task<UseCaseResult> ExecuteAsync(ConfirmPasswordInput requestInput, Guid userTargetId)
     {
         var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
 
         if (userToDelete is null || !hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
-            return new UseCaseResult<User>(
+            return new UseCaseResult(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
                 Message: "Credênciais incorretas."
             );
@@ -24,7 +24,7 @@ public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hashe
 
         await context.SaveChangesAsync();
 
-        return new UseCaseResult<User>(
+        return new UseCaseResult(
             HttpStatusCode: HttpStatusCode.OK,
             Message: "Conta deletada com sucesso!"
         );

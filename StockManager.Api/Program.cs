@@ -1,5 +1,6 @@
 using Scalar.AspNetCore;
 using StockManager.Api.Extensions.Configurations;
+using StockManager.Api.Extensions.OpenApi;
 using StockManager.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,15 +15,25 @@ builder.Services.ConfigureJwtAuthentication(secretKey);
 
 builder.ResolveDependency(secretKey);
 
-builder.Services.AddOpenApi();
+builder.Services.AddDocumentTransformerOpenApi();
+builder.Services.AddOperationTransformerOpenApi();
 
 var app = builder.Build();
 
-app.MapOpenApi();
-
-app.MapScalarApiReference();
-
 app.UseMiddleware<ExceptionMiddleware>();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+
+    app.MapScalarApiReference("/docs",options =>
+    {
+        options.Title = "Stock Manager Documentation";
+        options.WithOpenApiRoutePattern($"/openapi/{TransformersExtension.DocumentName}.json");
+        options.ForceDarkMode();
+        options.Theme = ScalarTheme.DeepSpace;
+    });
+}
 
 app.UseAuthentication();
 
