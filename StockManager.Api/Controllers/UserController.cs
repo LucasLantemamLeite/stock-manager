@@ -20,9 +20,6 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput, CreateUserUseCase createUserUseCase)
     {
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-
         var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
@@ -35,10 +32,7 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> LoginUserAsync([FromBody] LoginUserInput requestInput, LoginUserUseCase loginUserUseCase)
     {
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-
-        var useCaseResult = await loginUserUseCase.ExecuteAsync(requestInput);
+       var useCaseResult = await loginUserUseCase.ExecuteAsync(requestInput);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
@@ -56,9 +50,6 @@ public sealed class UserController : ControllerBase
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
 
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
-
         var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
@@ -75,9 +66,6 @@ public sealed class UserController : ControllerBase
 
         if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
             return Unauthorized();
-
-        if (!ModelState.IsValid)
-            return UnprocessableEntity(ModelState);
 
         var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
 
