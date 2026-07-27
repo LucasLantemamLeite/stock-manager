@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.UseCases.Users;
-using System.Security.Claims;
 using StockManager.Api.Entities.Users.Models;
 using StockManager.Api.UseCases.Result;
 
@@ -45,12 +44,10 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
-        var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
-            return Unauthorized();
-
-        var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
+        if (HttpContext.Items["AuthenticatedUserAccount"] is not User authenticatedUserAccount)
+            throw new NotImplementedException(); 
+        
+        var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
@@ -62,12 +59,10 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
-        var tokenIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (HttpContext.Items["AuthenticatedUserAccount"] is not User authenticatedUserAccount)
+            throw new NotImplementedException(); 
 
-        if (!Guid.TryParse(tokenIdString, out var tokenIdGuid))
-            return Unauthorized();
-
-        var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, tokenIdGuid);
+        var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
