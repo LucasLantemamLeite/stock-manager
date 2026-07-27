@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.UseCases.Users;
 using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.Extensions.Helpers;
 using StockManager.Api.UseCases.Result;
 
 namespace StockManager.Api.Controllers;
@@ -44,8 +45,7 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UpdateUserInput requestInput, UpdateUserUseCase updateUserUseCase)
     {
-        if (HttpContext.Items["AuthenticatedUserAccount"] is not User authenticatedUserAccount)
-            throw new NotImplementedException(); 
+        var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
         
         var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
 
@@ -59,8 +59,7 @@ public sealed class UserController : ControllerBase
     [ProducesResponseType<UseCaseResult>(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> DeleteUserAsync([FromBody] ConfirmPasswordInput requestInput, DeleteUserUseCase deleteUserUseCase)
     {
-        if (HttpContext.Items["AuthenticatedUserAccount"] is not User authenticatedUserAccount)
-            throw new NotImplementedException(); 
+        var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
 
         var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
 
