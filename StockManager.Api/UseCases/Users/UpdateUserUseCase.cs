@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
+using StockManager.Api.Entities.Models;
 using StockManager.Api.Services.Interfaces;
 using StockManager.Api.UseCases.Result;
-using System.Net;
-using StockManager.Api.Entities.Users.Models;
 
 namespace StockManager.Api.UseCases.Users;
 
@@ -14,20 +14,20 @@ public sealed class UpdateUserUseCase(AppDbContext appDbContext, IHasherService 
     {
         if (!hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
             return new UseCaseResult(
-                HttpStatusCode: HttpStatusCode.Unauthorized,
-                Message: "Credenciais incorretas."
+                HttpStatusCode.Unauthorized,
+                "Credenciais incorretas."
             );
 
         if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(requestInput.NewEmail)))
             return new UseCaseResult(
-                HttpStatusCode: HttpStatusCode.Conflict,
-                Message: "Email já está em uso."
+                HttpStatusCode.Conflict,
+                "Email já está em uso."
             );
 
         if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(requestInput.NewPhone)))
             return new UseCaseResult(
-                HttpStatusCode: HttpStatusCode.Conflict,
-                Message: "Número de telefone já está em uso."
+                HttpStatusCode.Conflict,
+                "Número de telefone já está em uso."
             );
 
         var newPasswordHash = requestInput.NewPassword is not null
@@ -43,8 +43,8 @@ public sealed class UpdateUserUseCase(AppDbContext appDbContext, IHasherService 
         await appDbContext.SaveChangesAsync();
 
         return new UseCaseResult(
-            HttpStatusCode: HttpStatusCode.OK,
-            Message: "Conta do usuário atualizada com sucesso."
+            HttpStatusCode.OK,
+            "Conta do usuário atualizada com sucesso."
         );
     }
 }

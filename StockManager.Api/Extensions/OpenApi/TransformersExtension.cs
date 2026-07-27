@@ -11,23 +11,24 @@ public static class TransformersExtension
     {
         public void AddDocumentTransformerOpenApi()
         {
-            services.AddOpenApi(DocumentName,options =>
+            services.AddOpenApi(DocumentName, options =>
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
                 {
                     const string infoTitle = "Stock Manager | v1";
-                    const string infoDescription = "Stock Manager é um sistema de gerênciamento de empresas, usuários, produtos e armazéns.";
+                    const string infoDescription =
+                        "Stock Manager é um sistema de gerênciamento de empresas, usuários, produtos e armazéns.";
                     const string infoVersion = "1.0.0";
-              
-                    document.Info = new OpenApiInfo()
+
+                    document.Info = new OpenApiInfo
                     {
                         Title = infoTitle,
                         Description = infoDescription,
-                        Version = infoVersion,
+                        Version = infoVersion
                     };
-                
+
                     const string serverUrl = "{protocol}://localhost:5034/";
                     const string serverDescription = "Rota base rodando na máquina local.";
-                    var serverVariables = new Dictionary<string, OpenApiServerVariable>()
+                    var serverVariables = new Dictionary<string, OpenApiServerVariable>
                     {
                         ["protocol"] = new()
                         {
@@ -35,18 +36,18 @@ public static class TransformersExtension
                             Default = "https"
                         }
                     };
-                
-                    document.Servers = new List<OpenApiServer>()
+
+                    document.Servers = new List<OpenApiServer>
                     {
                         new()
                         {
                             Url = serverUrl,
                             Description = serverDescription,
                             Variables = serverVariables
-                        },
+                        }
                     };
-            
-                    document.Tags = new HashSet<OpenApiTag>()
+
+                    document.Tags = new HashSet<OpenApiTag>
                     {
                         new()
                         {
@@ -54,12 +55,12 @@ public static class TransformersExtension
                             Description = "Responsável pelas operações referente ao usuário."
                         }
                     };
-                    
+
                     document.Components ??= new OpenApiComponents();
 
-                    document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>()
+                    document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
                     {
-                        ["BearerAuth"] = new OpenApiSecurityScheme()
+                        ["BearerAuth"] = new OpenApiSecurityScheme
                         {
                             Type = SecuritySchemeType.Http,
                             Scheme = "bearer",
@@ -96,10 +97,10 @@ public static class TransformersExtension
 
                         if (endpointPathItem.Operations is null)
                             throw new NullReferenceException("Operação da rota não encontrada.");
-                        
+
                         var endpointOperation = endpointPathItem.Operations[endpointMethod];
 
-                        endpointOperation.Security = new List<OpenApiSecurityRequirement>()
+                        endpointOperation.Security = new List<OpenApiSecurityRequirement>
                         {
                             new()
                             {
@@ -107,8 +108,8 @@ public static class TransformersExtension
                             }
                         };
                     }
-                    
-                
+
+
                     return Task.CompletedTask;
                 })
             );
@@ -116,23 +117,23 @@ public static class TransformersExtension
 
         public void AddOperationTransformerOpenApi()
         {
-            services.AddOpenApi(DocumentName,options =>
+            services.AddOpenApi(DocumentName, options =>
                 options.AddOperationTransformer((operation, context, cancellationToken) =>
                 {
-                    var defaultResponseErrorSchema = new OpenApiSchema()
+                    var defaultResponseErrorSchema = new OpenApiSchema
                     {
                         Type = JsonSchemaType.Object,
-                        Required = new HashSet<string>() { "message" },
-                        Properties = new Dictionary<string, IOpenApiSchema>()
+                        Required = new HashSet<string> { "message" },
+                        Properties = new Dictionary<string, IOpenApiSchema>
                         {
-                            ["message"] = new OpenApiSchema()
+                            ["message"] = new OpenApiSchema
                             {
-                                Type = JsonSchemaType.String,
-                            },
+                                Type = JsonSchemaType.String
+                            }
                         }
                     };
 
-                    var defaultResponseErrorContent = new Dictionary<string, OpenApiMediaType>()
+                    var defaultResponseErrorContent = new Dictionary<string, OpenApiMediaType>
                     {
                         ["application/json"] = new()
                         {
@@ -142,29 +143,27 @@ public static class TransformersExtension
 
                     operation.Responses ??= new OpenApiResponses();
 
-                    operation.Responses["500"] = new OpenApiResponse()
+                    operation.Responses["500"] = new OpenApiResponse
                     {
                         Description = "InternalServerError",
                         Content = defaultResponseErrorContent
                     };
-                    
+
                     var hasAuthorize = context.Description.ActionDescriptor.EndpointMetadata
                         .OfType<IAuthorizeData>()
                         .Any();
-                    
+
                     var hasAllowAnonymous = context.Description.ActionDescriptor.EndpointMetadata
                         .OfType<IAllowAnonymous>()
                         .Any();
 
                     if (hasAuthorize && !hasAllowAnonymous)
-                    {
-                        operation.Responses["401"] = new OpenApiResponse()
+                        operation.Responses["401"] = new OpenApiResponse
                         {
                             Description = "Unauthorized",
                             Content = defaultResponseErrorContent
                         };
-                    }
-                    
+
                     return Task.CompletedTask;
                 })
             );

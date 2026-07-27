@@ -11,7 +11,8 @@ public static class DependencyInjectionExtension
     public static void ResolveDependency(this WebApplicationBuilder builder, string secretKey)
     {
         var dbConnectionString = builder.Configuration.GetConnectionString("Default")
-            ?? throw new InvalidOperationException("ConnectionString do banco de dados não encontrada no appsettings.");
+                                 ?? throw new InvalidOperationException(
+                                     "ConnectionString do banco de dados não encontrada no appsettings.");
 
         builder.Services.AddDbContext<AppDbContext>(c => c.UseSqlServer(dbConnectionString));
 

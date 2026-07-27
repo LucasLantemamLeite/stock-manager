@@ -1,9 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using StockManager.Api.Entities.Users.Models;
-using StockManager.Api.Services.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using StockManager.Api.Entities.Models;
+using StockManager.Api.Services.Interfaces;
 
 namespace StockManager.Api.Services.Implementation;
 
@@ -17,7 +17,7 @@ public sealed class JwtTokenService(string secretKey) : ITokenService
 
         var encodedKey = Encoding.UTF8.GetBytes(SecretKey);
 
-        var tokenDescriptor = new SecurityTokenDescriptor()
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(encodedKey),
@@ -30,7 +30,7 @@ public sealed class JwtTokenService(string secretKey) : ITokenService
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("companyid", user.CompanyId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
-            ]),
+            ])
         };
 
         var userAuthToken = tokenHandler.CreateToken(tokenDescriptor);

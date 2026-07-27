@@ -2,7 +2,9 @@
 
 public abstract class Entity(Guid id)
 {
-    public Guid Id { get; } = id;
+    protected Entity() : this(Guid.NewGuid())
+    {
+    }
 
-    protected Entity() : this(id: Guid.NewGuid()) { }
+    public Guid Id { get; } = id;
 }

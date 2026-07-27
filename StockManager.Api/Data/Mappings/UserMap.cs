@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.Entities.Models;
 
 namespace StockManager.Api.Data.Mappings;
 

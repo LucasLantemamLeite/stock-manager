@@ -1,38 +1,41 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
-using StockManager.Api.Entities.Users.Models;
+using StockManager.Api.Entities.Models;
 using StockManager.Api.Services.Interfaces;
 using StockManager.Api.UseCases.Result;
-using System.Net;
 
 namespace StockManager.Api.UseCases.Users;
 
-public sealed class CreateUserUseCase(AppDbContext appDbContext, IHasherService hasherService, ITokenService tokenService)
+public sealed class CreateUserUseCase(
+    AppDbContext appDbContext,
+    IHasherService hasherService,
+    ITokenService tokenService)
 {
     public async Task<UseCaseResult<string>> ExecuteAsync(CreateUserInput requestInput)
     {
         if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(requestInput.Email)))
             return new UseCaseResult<string>(
-                HttpStatusCode: HttpStatusCode.Conflict,
-                Message: "Email já está em uso."
+                HttpStatusCode.Conflict,
+                "Email já está em uso."
             );
 
         if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(requestInput.Phone)))
             return new UseCaseResult<string>(
-                HttpStatusCode: HttpStatusCode.Conflict,
-                Message: "Número de telefone já está em uso."
+                HttpStatusCode.Conflict,
+                "Número de telefone já está em uso."
             );
 
         var userPasswordHash = hasherService.GeneratePasswordHash(requestInput.Password);
 
         var userToAdd = new User(
-            name: requestInput.Name,
-            email: requestInput.Email,
-            phone: requestInput.Phone,
-            password: userPasswordHash,
-            companyId: Guid.NewGuid(),
-            role: requestInput.Role
+            requestInput.Name,
+            requestInput.Email,
+            requestInput.Phone,
+            userPasswordHash,
+            Guid.NewGuid(),
+            requestInput.Role
         );
 
         appDbContext.Users.Add(userToAdd);
@@ -42,9 +45,9 @@ public sealed class CreateUserUseCase(AppDbContext appDbContext, IHasherService 
         var userAuthToken = tokenService.GenerateAuthToken(userToAdd);
 
         return new UseCaseResult<string>(
-            HttpStatusCode: HttpStatusCode.Created,
-            Message: "Conta do usuário criado com sucesso.",
-            Data: userAuthToken
+            HttpStatusCode.Created,
+            "Conta do usuário criado com sucesso.",
+            userAuthToken
         );
     }
 }

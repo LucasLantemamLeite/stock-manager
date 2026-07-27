@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using StockManager.Api.Extensions.Configurations;
 using StockManager.Api.Extensions.OpenApi;
@@ -11,7 +10,7 @@ builder.Services.AddControllers()
     .ConfigureModelStateFilter();
 
 var secretKey = builder.Configuration.GetValue<string>("SecretKey")
-    ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings.");
+                ?? throw new InvalidOperationException("SecretKey não encontrada no appsettings.");
 
 builder.Services.ConfigureJwtAuthentication(secretKey);
 
@@ -28,7 +27,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    app.MapScalarApiReference("/docs",options =>
+    app.MapScalarApiReference("/docs", options =>
     {
         options.Title = "Stock Manager Documentation";
         options.WithOpenApiRoutePattern($"/openapi/{TransformersExtension.DocumentName}.json");
@@ -39,7 +38,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 
-app.UseWhen(httpContext => httpContext.GetEndpoint()?.Metadata.OfType<IAuthorizeData>().Any() ?? false, 
+app.UseWhen(httpContext => httpContext.GetEndpoint()?.Metadata.OfType<IAuthorizeData>().Any() ?? false,
     branch => branch.UseMiddleware<UserAuthValidationMiddleware>());
 
 app.UseAuthorization();

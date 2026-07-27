@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using StockManager.Api.Entities.Users.Enums;
 using System.ComponentModel.DataAnnotations;
+using StockManager.Api.Entities.Enums;
 
 namespace StockManager.Api.Contracts.Users.Inputs;
 

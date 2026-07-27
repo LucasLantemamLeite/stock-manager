@@ -7,10 +7,10 @@ namespace StockManager.Api.Middlewares;
 public sealed class UserAuthValidationMiddleware(RequestDelegate next)
 {
     public const string HttpContextItemsKey = "AuthenticatedUserAccount";
-    
+
     public async Task InvokeAsync(HttpContext httpContext, AppDbContext appDbContext)
     {
-        var tokenIdString = httpContext.User.FindFirstValue((ClaimTypes.NameIdentifier));
+        var tokenIdString = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (!Guid.TryParse(tokenIdString, out var tokenGuidId))
         {
@@ -27,9 +27,9 @@ public sealed class UserAuthValidationMiddleware(RequestDelegate next)
             await httpContext.Response.CompleteAsync();
             return;
         }
-        
+
         httpContext.Items.Add(HttpContextItemsKey, authenticatedUserAccount);
-        
+
         await next(httpContext);
     }
 }

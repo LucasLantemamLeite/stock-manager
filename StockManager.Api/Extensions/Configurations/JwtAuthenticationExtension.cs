@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace StockManager.Api.Extensions.Configurations;
 
@@ -12,7 +12,7 @@ public static class JwtAuthenticationExtension
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options => options.TokenValidationParameters = new()
+        }).AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
@@ -23,7 +23,7 @@ public static class JwtAuthenticationExtension
             RequireAudience = true,
             ValidAudience = "stock-manager-client",
             ValidateLifetime = true,
-            RequireExpirationTime = true,
+            RequireExpirationTime = true
         });
 
         services.AddAuthorization();

@@ -6,8 +6,12 @@ namespace StockManager.Api.Services.Implementation;
 public sealed class BCryptHashService : IHasherService
 {
     public string GeneratePasswordHash(string passwordTarget)
-        => BC.HashPassword(passwordTarget);
+    {
+        return BC.HashPassword(passwordTarget);
+    }
 
     public bool VerifyPasswordHash(string passwordHash, string passwordTarget)
-        => BC.Verify(passwordTarget, passwordHash);
+    {
+        return BC.Verify(passwordTarget, passwordHash);
+    }
 }

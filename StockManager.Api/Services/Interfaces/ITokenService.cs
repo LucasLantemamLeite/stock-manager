@@ -1,4 +1,4 @@
-﻿using StockManager.Api.Entities.Users.Models;
+﻿using StockManager.Api.Entities.Models;
 
 namespace StockManager.Api.Services.Interfaces;
 

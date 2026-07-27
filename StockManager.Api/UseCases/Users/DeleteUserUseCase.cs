@@ -1,9 +1,9 @@
-﻿using StockManager.Api.Contracts.Users.Inputs;
+﻿using System.Net;
+using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
+using StockManager.Api.Entities.Models;
 using StockManager.Api.Services.Interfaces;
 using StockManager.Api.UseCases.Result;
-using System.Net;
-using StockManager.Api.Entities.Users.Models;
 
 namespace StockManager.Api.UseCases.Users;
 
@@ -13,8 +13,8 @@ public sealed class DeleteUserUseCase(AppDbContext appDbContext, IHasherService 
     {
         if (!hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
             return new UseCaseResult(
-                HttpStatusCode: HttpStatusCode.Unauthorized,
-                Message: "Credênciais incorretas."
+                HttpStatusCode.Unauthorized,
+                "Credênciais incorretas."
             );
 
         appDbContext.Users.Remove(userToDelete);
@@ -22,8 +22,8 @@ public sealed class DeleteUserUseCase(AppDbContext appDbContext, IHasherService 
         await appDbContext.SaveChangesAsync();
 
         return new UseCaseResult(
-            HttpStatusCode: HttpStatusCode.OK,
-            Message: "Conta deletada com sucesso!"
+            HttpStatusCode.OK,
+            "Conta deletada com sucesso!"
         );
     }
 }
