@@ -1,19 +1,10 @@
 ﻿using StockManager.Api.Entities.Base;
-using StockManager.Api.Entities.Users.Enums;
+using StockManager.Api.Entities.Enums;
 
-namespace StockManager.Api.Entities.Users.Models;
+namespace StockManager.Api.Entities.Models;
 
 public sealed class User : Entity
 {
-    public string Name { get; private set; }
-    public string Email { get; private set; }
-    public string Phone { get; private set; }
-    public string Password { get; private set; }
-    public Guid CompanyId { get; }
-    public Role Role { get; private set; }
-    public DateTime CreatedAt { get; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
-
     public User(string name, string email, string phone, string password, Guid companyId, Role role)
     {
         Name = name;
@@ -36,6 +27,15 @@ public sealed class User : Entity
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
+
+    public string Name { get; private set; }
+    public string Email { get; private set; }
+    public string Phone { get; private set; }
+    public string Password { get; private set; }
+    public Guid CompanyId { get; }
+    public Role Role { get; private set; }
+    public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
     public void SetName(string? newName)
     {
@@ -62,5 +62,7 @@ public sealed class User : Entity
     }
 
     public void SetUpdateAtToNow()
-        => UpdatedAt = DateTime.UtcNow;
+    {
+        UpdatedAt = DateTime.UtcNow;
+    }
 }
