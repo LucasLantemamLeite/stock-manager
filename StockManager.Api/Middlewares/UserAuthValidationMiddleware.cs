@@ -6,6 +6,8 @@ namespace StockManager.Api.Middlewares;
 
 public sealed class UserAuthValidationMiddleware(RequestDelegate next)
 {
+    public const string HttpContextItemsKey = "AuthenticatedUserAccount";
+    
     public async Task InvokeAsync(HttpContext httpContext, AppDbContext appDbContext)
     {
         var tokenIdString = httpContext.User.FindFirstValue((ClaimTypes.NameIdentifier));
@@ -26,7 +28,7 @@ public sealed class UserAuthValidationMiddleware(RequestDelegate next)
             return;
         }
         
-        httpContext.Items.Add("AuthenticatedUserAccount", authenticatedUserAccount);
+        httpContext.Items.Add(HttpContextItemsKey, authenticatedUserAccount);
         
         await next(httpContext);
     }
