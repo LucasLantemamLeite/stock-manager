@@ -7,7 +7,7 @@ using StockManager.Api.Entities.Users.Models;
 
 namespace StockManager.Api.UseCases.Users;
 
-public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
+public sealed class DeleteUserUseCase(AppDbContext appDbContext, IHasherService hasherService)
 {
     public async Task<UseCaseResult> ExecuteAsync(ConfirmPasswordInput requestInput, User userToDelete)
     {
@@ -17,9 +17,9 @@ public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hashe
                 Message: "Credênciais incorretas."
             );
 
-        context.Users.Remove(userToDelete);
+        appDbContext.Users.Remove(userToDelete);
 
-        await context.SaveChangesAsync();
+        await appDbContext.SaveChangesAsync();
 
         return new UseCaseResult(
             HttpStatusCode: HttpStatusCode.OK,

@@ -7,11 +7,11 @@ using System.Net;
 
 namespace StockManager.Api.UseCases.Users;
 
-public sealed class LoginUserUseCase(AppDbContext context, IHasherService hasherService, ITokenService tokenService)
+public sealed class LoginUserUseCase(AppDbContext appDbContext, IHasherService hasherService, ITokenService tokenService)
 {
     public async Task<UseCaseResult<string>> ExecuteAsync(LoginUserInput requestInput)
     {
-        var userToLogin = await context.Users.SingleOrDefaultAsync(u => u.Email.Equals(requestInput.Email));
+        var userToLogin = await appDbContext.Users.SingleOrDefaultAsync(u => u.Email.Equals(requestInput.Email));
 
         if (userToLogin is null || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
             return new UseCaseResult<string>(

@@ -8,17 +8,17 @@ using System.Net;
 
 namespace StockManager.Api.UseCases.Users;
 
-public sealed class CreateUserUseCase(AppDbContext context, IHasherService hasherService, ITokenService tokenService)
+public sealed class CreateUserUseCase(AppDbContext appDbContext, IHasherService hasherService, ITokenService tokenService)
 {
     public async Task<UseCaseResult<string>> ExecuteAsync(CreateUserInput requestInput)
     {
-        if (await context.Users.AnyAsync(u => u.Email.Equals(requestInput.Email)))
+        if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(requestInput.Email)))
             return new UseCaseResult<string>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Email já está em uso."
             );
 
-        if (await context.Users.AnyAsync(u => u.Phone.Equals(requestInput.Phone)))
+        if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(requestInput.Phone)))
             return new UseCaseResult<string>(
                 HttpStatusCode: HttpStatusCode.Conflict,
                 Message: "Número de telefone já está em uso."
@@ -35,9 +35,9 @@ public sealed class CreateUserUseCase(AppDbContext context, IHasherService hashe
             role: requestInput.Role
         );
 
-        context.Users.Add(userToAdd);
+        appDbContext.Users.Add(userToAdd);
 
-        await context.SaveChangesAsync();
+        await appDbContext.SaveChangesAsync();
 
         var userAuthToken = tokenService.GenerateAuthToken(userToAdd);
 
