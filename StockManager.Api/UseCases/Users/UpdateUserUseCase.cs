@@ -10,11 +10,9 @@ namespace StockManager.Api.UseCases.Users;
 
 public sealed class UpdateUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult> ExecuteAsync(UpdateUserInput requestInput, Guid userTargetId)
+    public async Task<UseCaseResult> ExecuteAsync(UpdateUserInput requestInput, User userToUpdate)
     {
-        var userToUpdate = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
-
-        if (userToUpdate is null || !hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
+        if (!hasherService.VerifyPasswordHash(userToUpdate.Password, requestInput.ConfirmPassword))
             return new UseCaseResult(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
                 Message: "Credenciais incorretas."

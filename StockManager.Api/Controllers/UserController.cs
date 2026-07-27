@@ -47,7 +47,7 @@ public sealed class UserController : ControllerBase
     {
         var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
         
-        var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
+        var useCaseResult = await updateUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
@@ -61,7 +61,7 @@ public sealed class UserController : ControllerBase
     {
         var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
 
-        var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount.Id);
+        var useCaseResult = await deleteUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }

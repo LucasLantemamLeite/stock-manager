@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StockManager.Api.Contracts.Users.Inputs;
+﻿using StockManager.Api.Contracts.Users.Inputs;
 using StockManager.Api.Data.Context;
 using StockManager.Api.Services.Interfaces;
 using StockManager.Api.UseCases.Result;
@@ -10,11 +9,9 @@ namespace StockManager.Api.UseCases.Users;
 
 public sealed class DeleteUserUseCase(AppDbContext context, IHasherService hasherService)
 {
-    public async Task<UseCaseResult> ExecuteAsync(ConfirmPasswordInput requestInput, Guid userTargetId)
+    public async Task<UseCaseResult> ExecuteAsync(ConfirmPasswordInput requestInput, User userToDelete)
     {
-        var userToDelete = await context.Users.SingleOrDefaultAsync(u => u.Id.Equals(userTargetId));
-
-        if (userToDelete is null || !hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
+        if (!hasherService.VerifyPasswordHash(userToDelete.Password, requestInput.ConfirmPassword))
             return new UseCaseResult(
                 HttpStatusCode: HttpStatusCode.Unauthorized,
                 Message: "Credênciais incorretas."
