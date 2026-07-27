@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
 using StockManager.Api.Extensions.Configurations;
@@ -58,6 +59,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
+
+app.UseWhen(httpContext => httpContext.GetEndpoint()?.Metadata.OfType<IAuthorizeData>().Any() ?? false, 
+    branch => branch.UseMiddleware<UserAuthValidationMiddleware>());
 
 app.UseAuthorization();
 
