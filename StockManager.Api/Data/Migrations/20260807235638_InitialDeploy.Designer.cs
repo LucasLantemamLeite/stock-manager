@@ -12,7 +12,7 @@ using StockManager.Api.Data.Context;
 namespace StockManager.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260712193203_InitialDeploy")]
+    [Migration("20260807235638_InitialDeploy")]
     partial class InitialDeploy
     {
         /// <inheritdoc />
@@ -25,7 +25,43 @@ namespace StockManager.Api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StockManager.Api.Models.User", b =>
+            modelBuilder.Entity("StockManager.Api.Entities.Models.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnName("Id");
+
+                    b.Property<string>("Cnpj")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("VARCHAR")
+                        .HasColumnName("Cnpj");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("DATETIME2(0)")
+                        .HasColumnName("CreatedAt");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Name");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("UNIQUEIDENTIFIER")
+                        .HasColumnName("OwnerId");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("DATETIME2(0)")
+                        .HasColumnName("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies", (string)null);
+                });
+
+            modelBuilder.Entity("StockManager.Api.Entities.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,6 +110,8 @@ namespace StockManager.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex(new[] { "Email" }, "Unique_Key_Users_Email")
                         .IsUnique();
 
@@ -81,6 +119,22 @@ namespace StockManager.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("StockManager.Api.Entities.Models.User", b =>
+                {
+                    b.HasOne("StockManager.Api.Entities.Models.Company", "Company")
+                        .WithMany("Users")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("StockManager.Api.Entities.Models.Company", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

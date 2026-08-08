@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,6 +11,22 @@ namespace StockManager.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    Name = table.Column<string>(type: "NVARCHAR(30)", maxLength: 30, nullable: false),
+                    Cnpj = table.Column<string>(type: "VARCHAR(14)", maxLength: 14, nullable: false),
+                    OwnerId = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -27,7 +44,18 @@ namespace StockManager.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CompanyId",
+                table: "Users",
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "Unique_Key_Users_Email",
@@ -47,6 +75,9 @@ namespace StockManager.Api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
         }
     }
 }
