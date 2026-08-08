@@ -7,9 +7,11 @@ namespace StockManager.Api.Data.Context;
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; init; }
+    public DbSet<Company> Companies { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserMap());
+        modelBuilder.ApplyConfiguration(new CompanyMap());
     }
 }
