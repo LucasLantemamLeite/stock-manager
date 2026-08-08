@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using StockManager.Api.Entities.Base;
 
 namespace StockManager.Api.Entities.Models;
