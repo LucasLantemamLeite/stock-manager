@@ -2,6 +2,7 @@
 using StockManager.Api.Data.Context;
 using StockManager.Api.Services.Implementation;
 using StockManager.Api.Services.Interfaces;
+using StockManager.Api.UseCases.Companies;
 using StockManager.Api.UseCases.Users;
 
 namespace StockManager.Api.Extensions.Configurations;
@@ -23,5 +24,7 @@ public static class DependencyInjectionExtension
         builder.Services.AddTransient<LoginUserUseCase>();
         builder.Services.AddTransient<UpdateUserUseCase>();
         builder.Services.AddTransient<DeleteUserUseCase>();
+
+        builder.Services.AddTransient<CreateCompanyUseCase>();
     }
 }
