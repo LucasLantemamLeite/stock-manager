@@ -10,44 +10,40 @@ namespace StockManager.Api.UseCases.Users;
 
 public sealed class CreateUserUseCase(
     AppDbContext appDbContext,
-    IHasherService hasherService,
-    ITokenService tokenService)
+    IHasherService hasherService)
 {
-    public async Task<UseCaseResult<string>> ExecuteAsync(CreateUserInput requestInput)
+    public async Task<UseCaseResult> ExecuteAsync(CreateUserInput createUserInput, User authenticatedUser)
     {
-        if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(requestInput.Email)))
-            return new UseCaseResult<string>(
+        if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(createUserInput.Email)))
+            return new UseCaseResult(
                 HttpStatusCode.Conflict,
                 "Email já está em uso."
             );
-
-        if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(requestInput.Phone)))
-            return new UseCaseResult<string>(
+        
+        if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(createUserInput.Phone)))
+            return new UseCaseResult(
                 HttpStatusCode.Conflict,
                 "Número de telefone já está em uso."
             );
 
-        var userPasswordHash = hasherService.GeneratePasswordHash(requestInput.Password);
-
+        var userPasswordHash = hasherService.GeneratePasswordHash(createUserInput.Password);
+        
         var userToAdd = new User(
-            requestInput.Name,
-            requestInput.Email,
-            requestInput.Phone,
+            createUserInput.Name,
+            createUserInput.Email,
+            createUserInput.Phone,
             userPasswordHash,
-            Guid.NewGuid(),
-            requestInput.Role
+            authenticatedUser.CompanyId,
+            createUserInput.Role
         );
-
+        
         appDbContext.Users.Add(userToAdd);
 
         await appDbContext.SaveChangesAsync();
 
-        var userAuthToken = tokenService.GenerateAuthToken(userToAdd);
-
-        return new UseCaseResult<string>(
+        return new UseCaseResult(
             HttpStatusCode.Created,
-            "Conta do usuário criado com sucesso.",
-            userAuthToken
+            "Usuário criado com sucesso."
         );
     }
 }
