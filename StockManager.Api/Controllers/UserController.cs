@@ -12,19 +12,22 @@ namespace StockManager.Api.Controllers;
 [Tags("Users")]
 public sealed class UserController : ControllerBase
 {
+        
     [HttpPost]
-    [AllowAnonymous]
+    [Authorize]
     [EndpointDescription("Cria nova conta do usuário.")]
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status201Created)]
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserInput requestInput,
         CreateUserUseCase createUserUseCase)
     {
-        var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput);
+        var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
+        
+        var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
-
+    
     [HttpPost("login")]
     [AllowAnonymous]
     [EndpointDescription("Loga na conta do usuário.")]
