@@ -4,16 +4,15 @@ namespace StockManager.Api.Entities.Models;
 
 public sealed class Company : Entity
 {
-    public Company(string name, string cnpj, Guid ownerId)
+    public Company(string name, string cnpj)
     {
         Name = name;
         Cnpj = cnpj;
-        OwnerId = ownerId;
     }
 
     public Company(Guid id, string name, string cnpj, Guid ownerId, DateTime createdAt, DateTime updatedAt) : base(id)
     {
-        Name = name;
+        Name = name;    
         Cnpj = cnpj;
         OwnerId = ownerId;
         CreatedAt = createdAt;
@@ -26,4 +25,7 @@ public sealed class Company : Entity
     public Guid OwnerId { get; private set; }
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+
+    public void SetOwnerId(Guid ownerId)
+        => OwnerId = ownerId;
 }
