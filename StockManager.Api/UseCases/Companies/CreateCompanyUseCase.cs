@@ -9,7 +9,10 @@ using StockManager.Api.UseCases.Result;
 
 namespace StockManager.Api.UseCases.Companies;
 
-public sealed class CreateCompanyUseCase(AppDbContext appDbContext, ITokenService tokenService, IHasherService hasherService)
+public sealed class CreateCompanyUseCase(
+    AppDbContext appDbContext,
+    ITokenService tokenService,
+    IHasherService hasherService)
 {
     public async Task<UseCaseResult<string>> ExecuteAsync(CreateCompanyInput createCompanyInput)
     {
@@ -18,7 +21,7 @@ public sealed class CreateCompanyUseCase(AppDbContext appDbContext, ITokenServic
                 HttpStatusCode.Conflict,
                 "CNPJ já está em uso."
             );
-        
+
         if (await appDbContext.Users.AnyAsync(u => u.Email.Equals(createCompanyInput.Email)))
             return new UseCaseResult<string>(
                 HttpStatusCode.Conflict,
@@ -37,20 +40,20 @@ public sealed class CreateCompanyUseCase(AppDbContext appDbContext, ITokenServic
         );
 
         var ownerPasswordHash = hasherService.GeneratePasswordHash(createCompanyInput.Password);
-        
+
         var ownerToAdd = new User(
             createCompanyInput.OwnerName,
             createCompanyInput.Email,
             createCompanyInput.Phone,
             ownerPasswordHash,
             companyToAdd.Id,
-            role: Role.Owner
+            Role.Owner
         );
-        
+
         companyToAdd.SetOwnerId(ownerToAdd.Id);
 
         appDbContext.AddRange(companyToAdd, ownerToAdd);
-        
+
         await appDbContext.SaveChangesAsync();
 
         var ownerAuthToken = tokenService.GenerateAuthToken(ownerToAdd);

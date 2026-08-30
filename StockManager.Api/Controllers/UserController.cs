@@ -21,12 +21,12 @@ public sealed class UserController : ControllerBase
         CreateUserUseCase createUserUseCase)
     {
         var authenticatedUserAccount = HttpContext.GetAuthenticatedUserFromItems();
-        
+
         var useCaseResult = await createUserUseCase.ExecuteAsync(requestInput, authenticatedUserAccount);
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
-    
+
     [HttpPost("login")]
     [AllowAnonymous]
     [EndpointDescription("Loga na conta do usuário.")]

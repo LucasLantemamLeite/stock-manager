@@ -12,7 +12,7 @@ public sealed class CompanyController : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> CreateCompanyAsync([FromServices] CreateCompanyUseCase createCompanyUseCase, 
+    public async Task<IActionResult> CreateCompanyAsync([FromServices] CreateCompanyUseCase createCompanyUseCase,
         [FromBody] CreateCompanyInput createCompanyInput)
     {
         var useCaseResult = await createCompanyUseCase.ExecuteAsync(createCompanyInput);

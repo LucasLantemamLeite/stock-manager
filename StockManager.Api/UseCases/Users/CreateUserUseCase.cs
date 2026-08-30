@@ -20,7 +20,7 @@ public sealed class CreateUserUseCase(
                 HttpStatusCode.Conflict,
                 "Email já está em uso."
             );
-        
+
         if (await appDbContext.Users.AnyAsync(u => u.Phone.Equals(createUserInput.Phone)))
             return new UseCaseResult(
                 HttpStatusCode.Conflict,
@@ -39,18 +39,18 @@ public sealed class CreateUserUseCase(
         while (randomPasswordChars.Count < 30)
         {
             var upperCase = Random.Shared.Next(0, 2) == 0;
-            
-            var randomNumberInterval = upperCase 
+
+            var randomNumberInterval = upperCase
                 ? Random.Shared.Next(65, 91)
                 : Random.Shared.Next(97, 123);
-            
+
             randomPasswordChars.Add((char)randomNumberInterval);
         }
 
         var randomPasswordGen = string.Join("", randomPasswordChars);
 
         var temporaryUserPasswordHash = hasherService.GeneratePasswordHash(randomPasswordGen);
-        
+
         var userToAdd = new User(
             createUserInput.Name,
             createUserInput.Email,
@@ -59,7 +59,7 @@ public sealed class CreateUserUseCase(
             authenticatedUser.CompanyId,
             createUserInput.Role
         );
-        
+
         appDbContext.Users.Add(userToAdd);
 
         await appDbContext.SaveChangesAsync();

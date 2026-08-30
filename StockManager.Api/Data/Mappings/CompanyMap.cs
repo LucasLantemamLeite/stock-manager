@@ -33,7 +33,7 @@ public sealed class CompanyMap : IEntityTypeConfiguration<Company>
             .HasColumnName("OwnerId")
             .HasColumnType("UNIQUEIDENTIFIER")
             .IsRequired();
-        
+
         builder.Property(u => u.CreatedAt)
             .HasColumnName("CreatedAt")
             .HasColumnType("DATETIME2(0)")

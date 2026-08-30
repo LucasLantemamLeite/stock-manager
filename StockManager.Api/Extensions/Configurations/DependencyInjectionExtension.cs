@@ -18,8 +18,8 @@ public static class DependencyInjectionExtension
         builder.Services.AddDbContext<AppDbContext>(c => c.UseSqlServer(dbConnectionString));
 
         var resendApiKey = builder.Configuration.GetValue<string>("ResendApiKey")
-            ?? throw new InvalidOperationException("ResendApiKey não encontrada no appsettings.");
-        
+                           ?? throw new InvalidOperationException("ResendApiKey não encontrada no appsettings.");
+
         builder.Services.AddSingleton<ITokenService>(new JwtTokenService(secretKey));
         builder.Services.AddSingleton<IHasherService, BCryptHashService>();
         builder.Services.AddSingleton<IEmailService>(new EmailService(resendApiKey));

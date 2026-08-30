@@ -12,7 +12,7 @@ public sealed class Company : Entity
 
     public Company(Guid id, string name, string cnpj, Guid ownerId, DateTime createdAt, DateTime updatedAt) : base(id)
     {
-        Name = name;    
+        Name = name;
         Cnpj = cnpj;
         OwnerId = ownerId;
         CreatedAt = createdAt;
@@ -20,12 +20,14 @@ public sealed class Company : Entity
     }
 
     public string Name { get; private set; }
-    public string Cnpj { get;  }
+    public string Cnpj { get; }
     public ICollection<User> Users { get; private set; } = [];
     public Guid OwnerId { get; private set; }
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
     public void SetOwnerId(Guid ownerId)
-        => OwnerId = ownerId;
+    {
+        OwnerId = ownerId;
+    }
 }
