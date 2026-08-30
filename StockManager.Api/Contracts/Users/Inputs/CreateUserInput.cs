@@ -24,12 +24,6 @@ public sealed record CreateUserInput
     public required string Phone { get; init; }
 
     [Required(ErrorMessage = "É obrigatório.")]
-    [MinLength(8, ErrorMessage = "Deve ser superior a 8 caracteres.")]
-    [MaxLength(30, ErrorMessage = "Não deve ser superior a 30 caracteres.")]
-    [Description("Senha da conta do usuário.")]
-    public required string Password { get; init; }
-
-    [Required(ErrorMessage = "É obrigatório.")]
     [Range(1, 3, ErrorMessage = "Deve estar entre os valores 1 e 3.")]
     [Description("Nível de acesso da conta do usuário.")]
     public required Role Role { get; init; }
