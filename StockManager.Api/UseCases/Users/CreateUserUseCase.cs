@@ -33,13 +33,28 @@ public sealed class CreateUserUseCase(
                 $" Seu acesso atual: {authenticatedUser.Role} ({(int)authenticatedUser.Role})"
             );
 
-        var userPasswordHash = hasherService.GeneratePasswordHash(createUserInput.Password);
+        ICollection<char> randomPasswordChars = [];
+
+        while (randomPasswordChars.Count < 30)
+        {
+            var upperCase = Random.Shared.Next(0, 2) == 0;
+            
+            var randomNumberInterval = upperCase 
+                ? Random.Shared.Next(65, 91)
+                : Random.Shared.Next(97, 123);
+            
+            randomPasswordChars.Add((char)randomNumberInterval);
+        }
+
+        var randomPasswordGen = string.Join("", randomPasswordChars);
+
+        var temporaryUserPasswordHash = hasherService.GeneratePasswordHash(randomPasswordGen);
         
         var userToAdd = new User(
             createUserInput.Name,
             createUserInput.Email,
             createUserInput.Phone,
-            userPasswordHash,
+            temporaryUserPasswordHash,
             authenticatedUser.CompanyId,
             createUserInput.Role
         );
