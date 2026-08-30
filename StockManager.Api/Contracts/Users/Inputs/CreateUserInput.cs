@@ -30,7 +30,7 @@ public sealed record CreateUserInput
     public required string Password { get; init; }
 
     [Required(ErrorMessage = "É obrigatório.")]
-    [Range(1, 2, ErrorMessage = "Deve estar entre os valores 1 e 2.")]
+    [Range(1, 3, ErrorMessage = "Deve estar entre os valores 1 e 3.")]
     [Description("Nível de acesso da conta do usuário.")]
     public required Role Role { get; init; }
 }
