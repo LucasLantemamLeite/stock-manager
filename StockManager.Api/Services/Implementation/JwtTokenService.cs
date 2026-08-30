@@ -29,7 +29,7 @@ public sealed class JwtTokenService(string secretKey) : ITokenService
             [
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim("companyid", user.CompanyId.ToString()),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(ClaimTypes.Role, ((int)user.Role).ToString())
             ])
         };
 
