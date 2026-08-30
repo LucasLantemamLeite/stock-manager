@@ -26,6 +26,13 @@ public sealed class CreateUserUseCase(
                 "Número de telefone já está em uso."
             );
 
+        if (createUserInput.Role >= authenticatedUser.Role)
+            return new UseCaseResult(
+                HttpStatusCode.Forbidden,
+                $"Só é permitido criar contas com acesso inferior." +
+                $" Seu acesso atual: {authenticatedUser.Role} ({(int)authenticatedUser.Role})"
+            );
+
         var userPasswordHash = hasherService.GeneratePasswordHash(createUserInput.Password);
         
         var userToAdd = new User(
