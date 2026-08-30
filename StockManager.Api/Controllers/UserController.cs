@@ -12,9 +12,8 @@ namespace StockManager.Api.Controllers;
 [Tags("Users")]
 public sealed class UserController : ControllerBase
 {
-        
     [HttpPost]
-    [Authorize]
+    [Authorize(Roles = "2,3")]
     [EndpointDescription("Cria nova conta do usuário.")]
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status201Created)]
     [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status409Conflict)]
