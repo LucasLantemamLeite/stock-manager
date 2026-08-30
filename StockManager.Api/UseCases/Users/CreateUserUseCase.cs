@@ -10,7 +10,8 @@ namespace StockManager.Api.UseCases.Users;
 
 public sealed class CreateUserUseCase(
     AppDbContext appDbContext,
-    IHasherService hasherService)
+    IHasherService hasherService,
+    IEmailService emailService)
 {
     public async Task<UseCaseResult> ExecuteAsync(CreateUserInput createUserInput, User authenticatedUser)
     {
@@ -62,6 +63,22 @@ public sealed class CreateUserUseCase(
         appDbContext.Users.Add(userToAdd);
 
         await appDbContext.SaveChangesAsync();
+
+        var emailHtmlContent =
+            "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 30px; color: #333;'>"
+            + "<h1 style='color: #2563eb;'>Conta criada com sucesso! 🎉</h1>"
+            + "<p>Olá! Sua conta foi criada e já está pronta para uso.</p>"
+            + "<p>Utilize a senha temporária abaixo para fazer seu primeiro login. "
+            + "Por segurança, altere-a assim que acessar sua conta.</p>"
+            + $"<div style='background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: center; font-size: 20px; font-weight: bold; letter-spacing: 2px;'>{randomPasswordGen}</div>"
+            + "<p style='margin-top: 25px; color: #666; font-size: 13px;'>"
+            + "Se você não solicitou esta conta, entre em contato com o suporte."
+            + "</p>"
+            + "<hr style='border: none; border-top: 1px solid #ddd; margin: 30px 0;'>"
+            + "<p style='text-align: center; color: #999; font-size: 12px;'>StockManager</p>"
+            + "</div>";
+
+        await emailService.Send("Conta criada", emailHtmlContent);
 
         return new UseCaseResult(
             HttpStatusCode.Created,
