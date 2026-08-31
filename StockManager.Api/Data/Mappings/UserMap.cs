@@ -57,6 +57,11 @@ public sealed class UserMap : IEntityTypeConfiguration<User>
             .HasColumnType("TINYINT")
             .IsRequired();
 
+        builder.Property(u => u.PasswordMustBeChanged)
+            .HasColumnName("PasswordMustBeChanged")
+            .HasColumnType("BIT")
+            .IsRequired();
+
         builder.Property(u => u.CreatedAt)
             .HasColumnName("CreatedAt")
             .HasColumnType("DATETIME2(0)")
