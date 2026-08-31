@@ -57,7 +57,8 @@ public sealed class CreateUserUseCase(
             createUserInput.Phone,
             temporaryUserPasswordHash,
             authenticatedUser.CompanyId,
-            createUserInput.Role
+            createUserInput.Role,
+            passwordMustBeChanged: true
         );
 
         appDbContext.Users.Add(userToAdd);

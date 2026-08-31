@@ -47,7 +47,8 @@ public sealed class CreateCompanyUseCase(
             createCompanyInput.Phone,
             ownerPasswordHash,
             companyToAdd.Id,
-            Role.Owner
+            Role.Owner,
+            passwordMustBeChanged: false
         );
 
         companyToAdd.SetOwnerId(ownerToAdd.Id);
