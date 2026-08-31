@@ -91,6 +91,10 @@ namespace StockManager.Api.Migrations
                         .HasColumnType("VARCHAR")
                         .HasColumnName("Password");
 
+                    b.Property<bool>("PasswordMustBeChanged")
+                        .HasColumnType("BIT")
+                        .HasColumnName("PasswordMustBeChanged");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(20)

@@ -38,6 +38,7 @@ namespace StockManager.Api.Migrations
                     Password = table.Column<string>(type: "VARCHAR(60)", maxLength: 60, nullable: false),
                     CompanyId = table.Column<Guid>(type: "UNIQUEIDENTIFIER", nullable: false),
                     Role = table.Column<byte>(type: "TINYINT", nullable: false),
+                    PasswordMustBeChanged = table.Column<bool>(type: "BIT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false)
                 },
