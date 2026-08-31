@@ -5,7 +5,7 @@ namespace StockManager.Api.Entities.Models;
 
 public sealed class User : Entity
 {
-    public User(string name, string email, string phone, string password, Guid companyId, Role role)
+    public User(string name, string email, string phone, string password, Guid companyId, Role role, bool passwordMustBeChanged)
     {
         Name = name;
         Email = email;
@@ -13,10 +13,11 @@ public sealed class User : Entity
         Password = password;
         CompanyId = companyId;
         Role = role;
+        PasswordMustBeChanged = passwordMustBeChanged;
     }
 
     public User(Guid id, string name, string email, string phone, string password, Guid companyId,
-        Role role, DateTime createdAt, DateTime updatedAt) : base(id)
+        Role role, bool passwordMustBeChanged, DateTime createdAt, DateTime updatedAt) : base(id)
     {
         Name = name;
         Email = email;
@@ -24,6 +25,7 @@ public sealed class User : Entity
         Password = password;
         CompanyId = companyId;
         Role = role;
+        PasswordMustBeChanged = passwordMustBeChanged;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
@@ -35,6 +37,7 @@ public sealed class User : Entity
     public Company? Company { get; private set; }
     public Guid CompanyId { get; }
     public Role Role { get; private set; }
+    public bool PasswordMustBeChanged { get; private set; }
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
@@ -65,5 +68,10 @@ public sealed class User : Entity
     public void SetUpdateAtToNow()
     {
         UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SetPasswordMustBeChangedToFalse()
+    {
+        PasswordMustBeChanged = false;
     }
 }
