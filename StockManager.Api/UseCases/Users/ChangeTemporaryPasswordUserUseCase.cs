@@ -35,7 +35,7 @@ public sealed class ChangeTemporaryPasswordUserUseCase(
 
         return new UseCaseResult<string>(
             HttpStatusCode.OK,
-            "",
+            "Senha alterada com sucesso.",
             userAuthToken
         );
     }
