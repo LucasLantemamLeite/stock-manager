@@ -71,5 +71,10 @@ public sealed class UserMap : IEntityTypeConfiguration<User>
             .HasColumnName("UpdatedAt")
             .HasColumnType("DATETIME2(0)")
             .IsRequired();
+
+        builder.Property(u => u.Active)
+            .HasColumnName("Active")
+            .HasColumnType("BIT")
+            .IsRequired();
     }
 }

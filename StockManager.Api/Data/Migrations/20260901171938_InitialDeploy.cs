@@ -40,7 +40,8 @@ namespace StockManager.Api.Migrations
                     Role = table.Column<byte>(type: "TINYINT", nullable: false),
                     PasswordMustBeChanged = table.Column<bool>(type: "BIT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "DATETIME2(0)", nullable: false),
+                    Active = table.Column<bool>(type: "BIT", nullable: false)
                 },
                 constraints: table =>
                 {

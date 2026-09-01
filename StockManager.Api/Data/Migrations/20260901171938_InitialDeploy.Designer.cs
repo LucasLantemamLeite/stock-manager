@@ -12,7 +12,7 @@ using StockManager.Api.Data.Context;
 namespace StockManager.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260831014905_InitialDeploy")]
+    [Migration("20260901171938_InitialDeploy")]
     partial class InitialDeploy
     {
         /// <inheritdoc />
@@ -67,6 +67,10 @@ namespace StockManager.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("UNIQUEIDENTIFIER")
                         .HasColumnName("Id");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("BIT")
+                        .HasColumnName("Active");
 
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("UNIQUEIDENTIFIER")

@@ -65,6 +65,10 @@ namespace StockManager.Api.Migrations
                         .HasColumnType("UNIQUEIDENTIFIER")
                         .HasColumnName("Id");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("BIT")
+                        .HasColumnName("Active");
+
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("UNIQUEIDENTIFIER")
                         .HasColumnName("CompanyId");
