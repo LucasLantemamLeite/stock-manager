@@ -15,14 +15,20 @@ public sealed class LoginUserUseCase(
     public async Task<UseCaseResult<string>> ExecuteAsync(LoginUserInput requestInput)
     {
         var userToLogin = await appDbContext.Users.SingleOrDefaultAsync(u => u.Email.Equals(requestInput.Email));
-
-        if (userToLogin is null ||
-            !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
+        
+        if (userToLogin is null
+            || !hasherService.VerifyPasswordHash(userToLogin.Password, requestInput.ConfirmPassword))
             return new UseCaseResult<string>(
                 HttpStatusCode.Unauthorized,
                 "Credênciais incorretas."
             );
 
+        if (userToLogin.PasswordMustBeChanged)
+            return new UseCaseResult<string>(
+                HttpStatusCode.OK,
+                "Nova conta identificada. Senha temporária deve ser alterada."
+            );
+        
         var userAuthToken = tokenService.GenerateAuthToken(userToLogin);
 
         return new UseCaseResult<string>(
