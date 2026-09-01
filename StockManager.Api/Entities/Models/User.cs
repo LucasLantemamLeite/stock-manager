@@ -17,7 +17,7 @@ public sealed class User : Entity
     }
 
     public User(Guid id, string name, string email, string phone, string password, Guid companyId,
-        Role role, bool passwordMustBeChanged, DateTime createdAt, DateTime updatedAt) : base(id)
+        Role role, bool passwordMustBeChanged, DateTime createdAt, DateTime updatedAt, bool active) : base(id)
     {
         Name = name;
         Email = email;
@@ -40,6 +40,7 @@ public sealed class User : Entity
     public bool PasswordMustBeChanged { get; private set; }
     public DateTime CreatedAt { get; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+    public bool Active { get; private set; } = true;
 
     public void SetName(string? newName)
     {
@@ -73,5 +74,10 @@ public sealed class User : Entity
     public void SetPasswordMustBeChangedToFalse()
     {
         PasswordMustBeChanged = false;
+    }
+
+    public void ToggleActive()
+    {
+        Active = !Active;
     }
 }
