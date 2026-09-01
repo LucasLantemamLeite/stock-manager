@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace StockManager.Api.UseCases.Result;
 
-public sealed record UseCaseResult<TData>(HttpStatusCode HttpStatusCode, string Message, TData? Data = null)
+public readonly record struct UseCaseResult<TData>(HttpStatusCode HttpStatusCode, string Message, TData? Data = null)
     where TData : class
 {
     private HttpStatusCode HttpStatusCode { get; } = HttpStatusCode;
@@ -18,7 +18,7 @@ public sealed record UseCaseResult<TData>(HttpStatusCode HttpStatusCode, string 
     [JsonIgnore] public int IntStatusCode => (int)HttpStatusCode;
 }
 
-public sealed record UseCaseResult(HttpStatusCode HttpStatusCode, string Message)
+public readonly record struct UseCaseResult(HttpStatusCode HttpStatusCode, string Message)
 {
     private HttpStatusCode HttpStatusCode { get; } = HttpStatusCode;
 
