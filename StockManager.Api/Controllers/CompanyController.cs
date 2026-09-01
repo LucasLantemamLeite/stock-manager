@@ -10,8 +10,8 @@ namespace StockManager.Api.Controllers;
 [Route("v1/company")]
 public sealed class CompanyController : ControllerBase
 {
-    [AllowAnonymous]
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateCompanyAsync([FromServices] CreateCompanyUseCase createCompanyUseCase,
         [FromBody] CreateCompanyInput createCompanyInput)
     {
