@@ -28,6 +28,7 @@ public static class DependencyInjectionExtension
         builder.Services.AddTransient<LoginUserUseCase>();
         builder.Services.AddTransient<UpdateUserUseCase>();
         builder.Services.AddTransient<DeleteUserUseCase>();
+        builder.Services.AddTransient<ChangeTemporaryPasswordUserUseCase>();
 
         builder.Services.AddTransient<CreateCompanyUseCase>();
     }
