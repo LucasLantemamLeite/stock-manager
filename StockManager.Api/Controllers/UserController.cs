@@ -70,4 +70,17 @@ public sealed class UserController : ControllerBase
 
         return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
     }
+
+    [HttpPatch("password")]
+    [AllowAnonymous]
+    [EndpointDescription("Atualiza a senha do usuário temporária para uma nova senha da escolha do próprio.")]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UseCaseResult<string>>(StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> UpdateUserPasswordAysnc([FromBody] ChangeTemporaryPasswordInput changeTemporaryPasswordInput, 
+        ChangeTemporaryPasswordUserUseCase changeTemporaryPasswordUserUseCase)
+    {
+        var useCaseResult = await changeTemporaryPasswordUserUseCase.ExecuteAsync(changeTemporaryPasswordInput);
+
+        return StatusCode(useCaseResult.IntStatusCode, useCaseResult);
+    }
 }
